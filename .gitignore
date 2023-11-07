@@ -1,0 +1,5 @@
+*.code-workspace
+!.vscode/*.json
+*.json
+.env
+dist
