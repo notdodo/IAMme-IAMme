@@ -3,3 +3,5 @@
 *.json
 .env
 dist
+iamme*
+IAMme-IAMme*
