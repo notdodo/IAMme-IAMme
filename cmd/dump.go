@@ -1,7 +1,7 @@
 package cmd
 
 import (
-	"IAMme-IAMme/pkg/app"
+	"github.com/notdodo/IAMme-IAMme/pkg/app"
 
 	"github.com/spf13/cobra"
 )

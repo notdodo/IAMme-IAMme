@@ -1,10 +1,11 @@
 package main
 
 import (
-	"IAMme-IAMme/cmd"
-	"IAMme-IAMme/pkg/infra/neo4j"
-	"IAMme-IAMme/pkg/infra/okta"
 	"log"
+
+	"github.com/notdodo/IAMme-IAMme/cmd"
+	"github.com/notdodo/IAMme-IAMme/pkg/infra/neo4j"
+	"github.com/notdodo/IAMme-IAMme/pkg/infra/okta"
 
 	"github.com/joho/godotenv"
 )

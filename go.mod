@@ -1,4 +1,4 @@
-module IAMme-IAMme
+module github.com/notdodo/IAMme-IAMme
 
 go 1.20
 

@@ -1,9 +1,10 @@
 package cmd
 
 import (
-	"IAMme-IAMme/pkg/infra/neo4j"
-	"IAMme-IAMme/pkg/infra/okta"
 	"fmt"
+
+	"github.com/notdodo/IAMme-IAMme/pkg/infra/neo4j"
+	"github.com/notdodo/IAMme-IAMme/pkg/infra/okta"
 
 	"github.com/spf13/cobra"
 )
@@ -15,7 +16,7 @@ type clients_type struct {
 
 var clients *clients_type
 var rootCmd = &cobra.Command{
-	Use:   "iamme-iamme",
+	Use:   "github.com/notdodo/IAMme-IAMme",
 	Short: "A CLI tool to interact with Okta and Neo4j",
 }
 

@@ -1,11 +1,12 @@
 package app
 
 import (
-	"IAMme-IAMme/pkg/infra/neo4j"
-	"IAMme-IAMme/pkg/infra/okta"
 	"context"
 	"log"
 	"strings"
+
+	"github.com/notdodo/IAMme-IAMme/pkg/infra/neo4j"
+	"github.com/notdodo/IAMme-IAMme/pkg/infra/okta"
 
 	neo4jSdk "github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
