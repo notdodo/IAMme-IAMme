@@ -16,7 +16,7 @@ type clients_type struct {
 
 var clients *clients_type
 var rootCmd = &cobra.Command{
-	Use:   "github.com/notdodo/IAMme-IAMme",
+	Use:   "iamme",
 	Short: "A CLI tool to interact with Okta and Neo4j",
 }
 
