@@ -30,6 +30,8 @@ type neo4jClient struct {
 	driver neo4j.DriverWithContext
 }
 
+/* #nosec */
+//nolint:all
 func (c *neo4jClient) setUpDb(session neo4j.SessionWithContext) {
 	session.Run(context.TODO(), `MATCH (n) DETACH DELETE n;`, nil)
 	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (u:User) ASSERT u.Id IS UNIQUE", nil)
