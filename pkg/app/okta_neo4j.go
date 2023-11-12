@@ -31,10 +31,9 @@ func (a *oktaNeo4jApp) Dump() {
 		return
 	}
 
-	flatUsers := make([]map[string]interface{}, 0)
-
+	flatUsers := make([]map[string]interface{}, 0, len(users))
 	for _, user := range users {
-		flatUser := goflat.FlatStruct(user, goflat.FlattenerConfig{
+		flatUser := goflat.FlatStruct(*user, goflat.FlattenerConfig{
 			Separator: "_",
 			OmitEmpty: true,
 			OmitNil:   true,

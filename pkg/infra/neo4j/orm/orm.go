@@ -30,7 +30,7 @@ func CreateNodes(session neo4j.SessionWithContext, labels []string, properties *
 }
 
 func filteredProperties(properties *[]map[string]interface{}) []map[string]interface{} {
-	filteredProperties := make([]map[string]interface{}, len(*properties))
+	filteredProperties := make([]map[string]interface{}, 0, len(*properties))
 	for _, props := range *properties {
 		filteredProp := make(map[string]interface{}, len(props))
 		for key, value := range props {
