@@ -33,9 +33,9 @@ type neo4jClient struct {
 /* #nosec */
 //nolint:all
 func (c *neo4jClient) setUpDb(session neo4j.SessionWithContext) {
-	session.Run(context.TODO(), `MATCH (n) DETACH DELETE n;`, nil)
-	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (u:User) ASSERT u.Id IS UNIQUE", nil)
-	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (g:Group) ASSERT g.Id IS UNIQUE", nil)
+	session.Run(context.TODO(), "MATCH (n) DETACH DELETE n;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (u:User) ASSERT u.Id IS UNIQUE;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (g:Group) ASSERT g.Id IS UNIQUE;", nil)
 }
 
 func NewNeo4jClient(dbUri, username, password string) Neo4jClient {
