@@ -5,6 +5,7 @@ go 1.20
 require (
 	github.com/joho/godotenv v1.5.1
 	github.com/neo4j/neo4j-go-driver/v5 v5.14.0
+	github.com/notdodo/goflat v0.0.0-20231112144802-4032d5f62c2e
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/spf13/cobra v1.8.0
 )
