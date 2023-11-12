@@ -2,10 +2,10 @@ package neo4j
 
 import (
 	"context"
-	"log"
 
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 	"github.com/notdodo/IAMme-IAMme/pkg/infra/neo4j/orm"
+	"github.com/notdodo/IAMme-IAMme/pkg/io/logging"
 )
 
 // Neo4jClient is an interface for interacting with the Neo4j database.
@@ -28,6 +28,7 @@ type Result interface {
 
 type neo4jClient struct {
 	driver neo4j.DriverWithContext
+	log    logging.LogManager
 }
 
 /* #nosec */
@@ -39,12 +40,14 @@ func (c *neo4jClient) setUpDb(session neo4j.SessionWithContext) {
 }
 
 func NewNeo4jClient(dbUri, username, password string) Neo4jClient {
+	logger := logging.NewLogManager()
 	driver, err := neo4j.NewDriverWithContext(dbUri, neo4j.BasicAuth(username, password, ""))
 	if err != nil {
-		log.Fatalln("Invalid Neo4j login", err.Error())
+		logger.Error("Invalid Neo4j login", "err", err)
 	}
 	client := &neo4jClient{
 		driver: driver,
+		log:    logger,
 	}
 	client.setUpDb(client.Connect())
 	return client
@@ -63,7 +66,7 @@ func (c *neo4jClient) Close() error {
 func (c *neo4jClient) CreateNodes(labels []string, properties *[]map[string]interface{}) ([]map[string]interface{}, error) {
 	nodeIDs, err := orm.CreateNodes(c.Connect(), []string{"User"}, properties)
 	if err != nil {
-		log.Fatalln(err)
+		c.log.Error("Failed creating nodes on Neo4J", "err", err)
 	}
 	return nodeIDs, err
 }

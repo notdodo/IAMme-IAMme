@@ -8,7 +8,6 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-// CreateNode creates nodes in Neo4j
 func CreateNodes(session neo4j.SessionWithContext, labels []string, properties *[]map[string]interface{}) ([]map[string]interface{}, error) {
 	ctx := context.TODO()
 	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
@@ -54,7 +53,6 @@ func collectResults(result neo4j.ResultWithContext, ctx context.Context) (result
 	return results, result.Err()
 }
 
-// isPrimitive checks if a value is a primitive type
 func isPrimitive(value interface{}) bool {
 	switch value.(type) {
 	case int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64,
@@ -65,12 +63,6 @@ func isPrimitive(value interface{}) bool {
 	}
 }
 
-// labelString generates a string representation of labels for use in Cypher queries.
 func labelString(labels []string) string {
-	return joinLabels(labels)
-}
-
-// joinLabels joins label strings with ":" separator.
-func joinLabels(labels []string) string {
 	return strings.Join(labels, ":")
 }

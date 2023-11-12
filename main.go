@@ -15,5 +15,7 @@ func main() {
 	if err != nil {
 		log.Fatalln(err.Error())
 	}
-	cmd.Execute(okta.NewOktaClient(envFile["OKTA_CLIENT_ORGURL"], envFile["OKTA_CLIENT_TOKEN"]), neo4j.NewNeo4jClient(envFile["NEO4J_URL"], envFile["NEO4J_USER"], envFile["NEO4J_PASS"]))
+	cmd.Execute(
+		okta.NewOktaClient(envFile["OKTA_CLIENT_ORGURL"], envFile["OKTA_CLIENT_TOKEN"]),
+		neo4j.NewNeo4jClient(envFile["NEO4J_URL"], envFile["NEO4J_USER"], envFile["NEO4J_PASS"]))
 }

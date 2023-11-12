@@ -1,10 +1,10 @@
 package app
 
 import (
-	"log"
-
 	"github.com/notdodo/IAMme-IAMme/pkg/infra/neo4j"
 	"github.com/notdodo/IAMme-IAMme/pkg/infra/okta"
+	"github.com/notdodo/IAMme-IAMme/pkg/io/logging"
+
 	"github.com/notdodo/goflat"
 )
 
@@ -13,21 +13,24 @@ type OktaNeo4jApp interface {
 }
 
 func NewOktaNeo4jApp(oktaClient okta.OktaClient, neo4jClient neo4j.Neo4jClient) OktaNeo4jApp {
+	logger := logging.NewLogManager()
 	return &oktaNeo4jApp{
 		oktaClient:  oktaClient,
 		neo4jClient: neo4jClient,
+		logger:      logger,
 	}
 }
 
 type oktaNeo4jApp struct {
 	oktaClient  okta.OktaClient
 	neo4jClient neo4j.Neo4jClient
+	logger      logging.LogManager
 }
 
 func (a *oktaNeo4jApp) Dump() {
 	users, err := a.oktaClient.GetUsers()
 	if err != nil {
-		log.Println("Error fetching users from Okta:", err)
+		a.logger.Error("Error fetching users from Okta:", "err", err)
 		return
 	}
 
@@ -42,6 +45,6 @@ func (a *oktaNeo4jApp) Dump() {
 	}
 
 	if _, err = a.neo4jClient.CreateNodes([]string{"User"}, &flatUsers); err != nil {
-		log.Fatalln(err)
+		a.logger.Error("Error creating user nodes on Neo4J", "err", err)
 	}
 }
