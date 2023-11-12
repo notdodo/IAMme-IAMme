@@ -3,8 +3,8 @@ package okta
 import (
 	"context"
 	"fmt"
-	"log"
 
+	"github.com/notdodo/IAMme-IAMme/pkg/io/logging"
 	"github.com/okta/okta-sdk-golang/v2/okta"
 )
 
@@ -17,16 +17,19 @@ type OktaClient interface {
 type oktaClient struct {
 	oktaClient *okta.Client
 	context    context.Context
+	log        logging.LogManager
 }
 
 func NewOktaClient(orgUrl, apiKey string) OktaClient {
+	logger := logging.NewLogManager()
 	ctx, client, err := okta.NewClient(context.Background(), okta.WithOrgUrl(fmt.Sprintf("https://%s", orgUrl)), okta.WithToken(apiKey))
 	if err != nil {
-		log.Fatalln("Invalid Okta login", err.Error())
+		logger.Error("Invalid Okta login", "err", err)
 	}
 	return &oktaClient{
 		oktaClient: client,
 		context:    ctx,
+		log:        logger,
 	}
 }
 
