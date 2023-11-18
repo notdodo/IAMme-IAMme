@@ -30,3 +30,9 @@ func Execute(neo4j neo4j.Neo4jClient) {
 		logger.Error("Error executing command", "err", err)
 	}
 }
+
+func markAsRequired(flag string) {
+	if err := rootCmd.MarkFlagRequired(flag); err != nil {
+		logger.Error("Required flags not provided", "flag", flag)
+	}
+}
