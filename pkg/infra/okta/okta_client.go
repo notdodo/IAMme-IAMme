@@ -21,11 +21,12 @@ type oktaClient struct {
 }
 
 func NewOktaClient(orgUrl, apiKey string) OktaClient {
-	logger := logging.NewLogManager()
-	ctx, client, err := okta.NewClient(context.Background(), okta.WithOrgUrl(fmt.Sprintf("https://%s", orgUrl)), okta.WithToken(apiKey))
+	logger := logging.GetLogManager()
+	ctx, client, err := okta.NewClient(context.TODO(), okta.WithOrgUrl(fmt.Sprintf("https://%s", orgUrl)), okta.WithToken(apiKey))
 	if err != nil {
 		logger.Error("Invalid Okta login", "err", err)
 	}
+	logger.Info("Valid Okta client", "orgUrl", orgUrl)
 	return &oktaClient{
 		oktaClient: client,
 		context:    ctx,
@@ -34,17 +35,23 @@ func NewOktaClient(orgUrl, apiKey string) OktaClient {
 }
 
 func (c *oktaClient) GetUsers() ([]*okta.User, error) {
-	users, _, err := c.oktaClient.User.ListUsers(context.TODO(), nil)
+	c.log.Info("Getting Okta users")
+	users, response, err := c.oktaClient.User.ListUsers(context.TODO(), nil)
 	if err != nil {
 		return nil, err
 	}
+	c.log.Info(fmt.Sprintf("Found %d users", len(users)))
+	c.log.Debug(fmt.Sprintf("Found %d users", len(users)), "users", response.Body)
 	return users, nil
 }
 
 func (c *oktaClient) GetGroups() ([]*okta.Group, error) {
-	groups, _, err := c.oktaClient.Group.ListGroups(context.TODO(), nil)
+	c.log.Info("Getting Okta groups")
+	groups, response, err := c.oktaClient.Group.ListGroups(context.TODO(), nil)
 	if err != nil {
 		return nil, err
 	}
+	c.log.Info(fmt.Sprintf("Found %d groups", len(groups)))
+	c.log.Debug(fmt.Sprintf("Found %d groups", len(groups)), "groups", response.Body)
 	return groups, nil
 }
