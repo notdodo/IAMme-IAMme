@@ -28,23 +28,56 @@ type oktaNeo4jApp struct {
 }
 
 func (a *oktaNeo4jApp) Dump() {
+	a.fetchAndCreateNodes([]string{"User"}, a.getUsers)
+	a.fetchAndCreateNodes([]string{"Groups"}, a.getGroups)
+}
+
+func (a *oktaNeo4jApp) getUsers() ([]interface{}, error) {
 	users, err := a.oktaClient.GetUsers()
 	if err != nil {
 		a.logger.Error("Error fetching users from Okta:", "err", err)
+		return nil, err
+	}
+	usersInterface := make([]interface{}, len(users))
+	for i, user := range users {
+		usersInterface[i] = user
+	}
+
+	return usersInterface, err
+}
+
+func (a *oktaNeo4jApp) getGroups() ([]interface{}, error) {
+	groups, err := a.oktaClient.GetGroups()
+	if err != nil {
+		a.logger.Error("Error fetching groups from Okta:", "err", err)
+		return nil, err
+	}
+	groupsInterface := make([]interface{}, len(groups))
+	for i, group := range groups {
+		groupsInterface[i] = group
+	}
+
+	return groupsInterface, err
+}
+
+func (a *oktaNeo4jApp) fetchAndCreateNodes(nodeLabels []string, oktaClientFunc func() ([]interface{}, error)) {
+	data, err := oktaClientFunc()
+	if err != nil {
+		a.logger.Error("Error fetching data from Okta:", "err", err)
 		return
 	}
 
-	flatUsers := make([]map[string]interface{}, 0, len(users))
-	for _, user := range users {
-		flatUser := goflat.FlatStruct(*user, goflat.FlattenerConfig{
+	flatData := make([]map[string]interface{}, 0, len(data))
+	for _, item := range data {
+		flatItem := goflat.FlatStruct(item, goflat.FlattenerConfig{
 			Separator: "_",
 			OmitEmpty: true,
 			OmitNil:   true,
 		})
-		flatUsers = append(flatUsers, flatUser)
+		flatData = append(flatData, flatItem)
 	}
 
-	if _, err = a.neo4jClient.CreateNodes([]string{"User"}, &flatUsers); err != nil {
-		a.logger.Error("Error creating user nodes on Neo4J", "err", err)
+	if _, err := a.neo4jClient.CreateNodes(nodeLabels, &flatData); err != nil {
+		a.logger.Error("Error creating nodes on Neo4J", "err", err)
 	}
 }
