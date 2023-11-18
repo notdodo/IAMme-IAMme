@@ -22,7 +22,7 @@ func NewLogManager() LogManager {
 	return &logManager{
 		logger: log.NewWithOptions(os.Stdout, log.Options{
 			CallerOffset:    1,
-			Fields:          []interface{}{"err"},
+			Fields:          []interface{}{"err", "flag"},
 			Level:           log.WarnLevel,
 			ReportCaller:    true,
 			ReportTimestamp: true,
@@ -36,14 +36,14 @@ func (lm *logManager) Debug(message interface{}, keyvals ...interface{}) {
 }
 
 func (lm *logManager) Info(message interface{}, keyvals ...interface{}) {
-	lm.logger.Info(message)
+	lm.logger.Info(message, keyvals...)
 }
 
 func (lm *logManager) Warn(message interface{}, keyvals ...interface{}) {
-	lm.logger.Info(message)
+	lm.logger.Info(message, keyvals...)
 }
 
 func (lm *logManager) Error(message interface{}, keyvals ...interface{}) {
-	lm.logger.Error(message)
+	lm.logger.Error(message, keyvals...)
 	os.Exit(1)
 }
