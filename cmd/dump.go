@@ -10,10 +10,14 @@ var usersCmd = &cobra.Command{
 	Use:   "dump",
 	Short: "Fetch Okta info and store them in Neo4j",
 	Run: func(cmd *cobra.Command, args []string) {
-		rootCmd.MarkFlagRequired("org-url")
-		rootCmd.MarkFlagRequired("client-token")
+		if err := rootCmd.MarkFlagRequired("org-url"); err != nil {
+			logger.Error("Required flags not provided", "flag", "org-url")
+		}
+		if err := rootCmd.MarkFlagRequired("client-token"); err != nil {
+			logger.Error("Required flags not provided", "flag", "client-token")
+		}
 		if err := rootCmd.ValidateRequiredFlags(); err != nil {
-			logger.Error("Required flags not provided", "err", err)
+			logger.Error("Required flags not provided", err)
 		}
 		oktaNeo4jApp := app.NewOktaNeo4jApp(okta.NewOktaClient(orgUrl, oktaClientToken), neo4jClient)
 		oktaNeo4jApp.Dump()

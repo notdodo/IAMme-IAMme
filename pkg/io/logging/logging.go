@@ -22,7 +22,7 @@ func NewLogManager() LogManager {
 	return &logManager{
 		logger: log.NewWithOptions(os.Stdout, log.Options{
 			CallerOffset:    1,
-			Fields:          []interface{}{"err"},
+			Fields:          []interface{}{"err", "flag"},
 			Level:           log.WarnLevel,
 			ReportCaller:    true,
 			ReportTimestamp: true,
