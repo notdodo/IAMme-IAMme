@@ -17,6 +17,10 @@ permissions:
   contents: read
   pull-requests: read
 
+concurrency:
+  group: iamme-build-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   lint:
     name: lint

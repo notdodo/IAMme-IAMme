@@ -11,6 +11,10 @@ on:
     paths:
       - "**.go"
 
+concurrency:
+  group: iamme-gosec-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   gosec:
     runs-on: ubuntu-latest
