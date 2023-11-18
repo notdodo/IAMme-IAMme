@@ -13,7 +13,13 @@ var usersCmd = &cobra.Command{
 		markAsRequired("org-url")
 		markAsRequired("client-token")
 		if err := rootCmd.ValidateRequiredFlags(); err != nil {
-			logger.Error("Required flags not provided", err)
+			logger.Error("Required flags not provided", "err", err)
+		}
+		if cmd.Flags().Changed(flagVerbose) {
+			logger.SetVerboseLevel()
+		}
+		if cmd.Flags().Changed(flagDebug) {
+			logger.SetDebugLevel()
 		}
 		oktaNeo4jApp := app.NewOktaNeo4jApp(okta.NewOktaClient(orgUrl, oktaClientToken), neo4jClient)
 		oktaNeo4jApp.Dump()

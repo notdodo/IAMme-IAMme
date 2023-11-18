@@ -13,7 +13,7 @@ type OktaNeo4jApp interface {
 }
 
 func NewOktaNeo4jApp(oktaClient okta.OktaClient, neo4jClient neo4j.Neo4jClient) OktaNeo4jApp {
-	logger := logging.NewLogManager()
+	logger := logging.GetLogManager()
 	return &oktaNeo4jApp{
 		oktaClient:  oktaClient,
 		neo4jClient: neo4jClient,

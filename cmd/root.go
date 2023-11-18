@@ -7,23 +7,31 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var logger logging.LogManager
-var verbose bool
-var orgUrl string
-var oktaClientToken string
-var neo4jClient neo4j.Neo4jClient
-var rootCmd = &cobra.Command{
-	Use:   "iamme",
-	Short: "A CLI tool to interact with Okta and Neo4j",
-}
+const (
+	flagVerbose         = "verbose"
+	flagDebug           = "debug"
+	flagOrgURL          = "org-url"
+	flagOktaClientToken = "client-token"
+)
+
+var (
+	logger          logging.LogManager
+	orgUrl          string
+	oktaClientToken string
+	neo4jClient     neo4j.Neo4jClient
+	rootCmd         = &cobra.Command{
+		Use:   "iamme",
+		Short: "A CLI tool to interact with Okta and Neo4j",
+	}
+)
 
 func init() {
-	logger = logging.NewLogManager()
-	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
-	rootCmd.PersistentFlags().StringVarP(&orgUrl, "org-url", "u", "", "Okta Org URL")
-	rootCmd.PersistentFlags().StringVarP(&oktaClientToken, "client-token", "c", "", "Okta Client Token")
+	logger = logging.GetLogManager()
+	rootCmd.PersistentFlags().BoolP(flagVerbose, "v", false, "Verbose output")
+	rootCmd.PersistentFlags().BoolP(flagDebug, "d", false, "Debug output")
+	rootCmd.PersistentFlags().StringVarP(&orgUrl, flagOrgURL, "u", "", "Okta Org URL")
+	rootCmd.PersistentFlags().StringVarP(&oktaClientToken, flagOktaClientToken, "c", "", "Okta Client Token")
 }
-
 func Execute(neo4j neo4j.Neo4jClient) {
 	neo4jClient = neo4j
 	if err := rootCmd.Execute(); err != nil {
@@ -33,6 +41,6 @@ func Execute(neo4j neo4j.Neo4jClient) {
 
 func markAsRequired(flag string) {
 	if err := rootCmd.MarkFlagRequired(flag); err != nil {
-		logger.Error("Required flags not provided", "flag", flag)
+		logger.Error("Required flags not provided", "err", err, "flag", flag)
 	}
 }
