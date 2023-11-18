@@ -43,7 +43,7 @@ func (a *oktaNeo4jApp) getUsers() ([]interface{}, error) {
 		usersInterface[i] = user
 	}
 
-	return usersInterface, nil
+	return usersInterface, err
 }
 
 func (a *oktaNeo4jApp) getGroups() ([]interface{}, error) {
@@ -57,7 +57,7 @@ func (a *oktaNeo4jApp) getGroups() ([]interface{}, error) {
 		groupsInterface[i] = group
 	}
 
-	return groupsInterface, nil
+	return groupsInterface, err
 }
 
 func (a *oktaNeo4jApp) fetchAndCreateNodes(nodeLabels []string, oktaClientFunc func() ([]interface{}, error)) {
