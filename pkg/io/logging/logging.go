@@ -36,14 +36,14 @@ func (lm *logManager) Debug(message interface{}, keyvals ...interface{}) {
 }
 
 func (lm *logManager) Info(message interface{}, keyvals ...interface{}) {
-	lm.logger.Info(message)
+	lm.logger.Info(message, keyvals...)
 }
 
 func (lm *logManager) Warn(message interface{}, keyvals ...interface{}) {
-	lm.logger.Info(message)
+	lm.logger.Info(message, keyvals...)
 }
 
 func (lm *logManager) Error(message interface{}, keyvals ...interface{}) {
-	lm.logger.Error(message)
+	lm.logger.Error(message, keyvals...)
 	os.Exit(1)
 }
