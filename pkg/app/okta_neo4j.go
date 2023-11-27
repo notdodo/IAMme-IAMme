@@ -77,10 +77,10 @@ func flat[T any](data []T) []map[string]interface{} {
 	return flatData
 }
 
-func (a *oktaNeo4jApp) createNodes(nodeLabels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
+func (a *oktaNeo4jApp) createNodes(nodeLabels []string, properties []map[string]interface{}) []map[string]interface{} {
 	nodeIDs, err := a.neo4jClient.CreateNodes(nodeLabels, properties)
 	if err != nil {
 		a.logger.Error("Error creating nodes on Neo4J", "err", err)
 	}
-	return nodeIDs, err
+	return nodeIDs
 }
