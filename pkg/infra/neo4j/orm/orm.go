@@ -8,7 +8,7 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
-func CreateNodes(session neo4j.SessionWithContext, labels []string, properties *[]map[string]interface{}) ([]map[string]interface{}, error) {
+func CreateNodes(session neo4j.SessionWithContext, labels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
 	ctx := context.TODO()
 	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
 		createNodeQuery := fmt.Sprintf("UNWIND $propsList AS props CREATE (n:%s) SET n += props RETURN id(n) as id", labelString(labels))
@@ -28,10 +28,10 @@ func CreateNodes(session neo4j.SessionWithContext, labels []string, properties *
 	return result.([]map[string]interface{}), err
 }
 
-func filteredProperties(properties *[]map[string]interface{}) []map[string]interface{} {
-	filteredProperties := make([]map[string]interface{}, 0, len(*properties))
-	for _, props := range *properties {
-		filteredProp := make(map[string]interface{}, len(props))
+func filteredProperties(properties []map[string]interface{}) []map[string]interface{} {
+	filteredProperties := make([]map[string]interface{}, 0, len(properties))
+	for _, props := range properties {
+		filteredProp := make(map[string]interface{}, 0)
 		for key, value := range props {
 			if isPrimitive(value) {
 				filteredProp[key] = value
