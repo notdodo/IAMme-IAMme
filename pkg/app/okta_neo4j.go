@@ -28,12 +28,9 @@ type oktaNeo4jApp struct {
 }
 
 func (a *oktaNeo4jApp) Dump() {
-	users, _ := a.getUsers()
-	a.createNodes([]string{"User"}, flat(users))
-	groups, _ := a.getGroups()
-	a.createNodes([]string{"Group"}, flat(groups))
-	rules, _ := a.getRules()
-	a.createNodes([]string{"Rule"}, flat(rules))
+	a.createNodes([]string{"User"}, flat(a.getUsers()))
+	a.createNodes([]string{"Group"}, flat(a.getGroups()))
+	a.createNodes([]string{"Rule"}, flat(a.getRules()))
 
 	// var groupIdsList [][]string
 
@@ -43,30 +40,28 @@ func (a *oktaNeo4jApp) Dump() {
 	// }
 }
 
-func (a *oktaNeo4jApp) getUsers() ([]*okta.User, error) {
+func (a *oktaNeo4jApp) getUsers() []*okta.User {
 	users, err := a.oktaClient.GetUsers()
 	if err != nil {
 		a.logger.Error("Error fetching users from Okta:", "err", err)
 	}
-	return users, err
+	return users
 }
 
-func (a *oktaNeo4jApp) getGroups() ([]*okta.Group, error) {
+func (a *oktaNeo4jApp) getGroups() []*okta.Group {
 	groups, err := a.oktaClient.GetGroups()
 	if err != nil {
 		a.logger.Error("Error fetching groups from Okta:", "err", err)
-		return nil, err
 	}
-	return groups, nil
+	return groups
 }
 
-func (a *oktaNeo4jApp) getRules() ([]*okta.GroupRule, error) {
+func (a *oktaNeo4jApp) getRules() []*okta.GroupRule {
 	rules, err := a.oktaClient.GetGroupsRules()
 	if err != nil {
 		a.logger.Error("Error fetching rules from Okta:", "err", err)
-		return nil, err
 	}
-	return rules, err
+	return rules
 }
 
 func flat[T any](data []T) []map[string]interface{} {
