@@ -6,15 +6,27 @@ updates:
       interval: monthly
       time: "12:00"
       day: monday
+    groups:
+      iamme:
+        patterns:
+          - "*"
   - package-ecosystem: docker
     directory: /
     schedule:
       interval: monthly
       time: "12:00"
       day: wednesday
+    groups:
+      iamme-docker:
+        patterns:
+          - "*"
   - package-ecosystem: github-actions
     directory: .github
     schedule:
       interval: monthly
       time: "12:00"
       day: wednesday
+    groups:
+      iamme-ghas:
+        patterns:
+          - "*"
