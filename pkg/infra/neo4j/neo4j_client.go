@@ -12,7 +12,7 @@ import (
 type Neo4jClient interface {
 	Connect() neo4j.SessionWithContext
 	Close() error
-	CreateNodes([]string, *[]map[string]interface{}) ([]map[string]interface{}, error)
+	CreateNodes([]string, []map[string]interface{}) ([]map[string]interface{}, error)
 }
 
 // Session is an interface for a Neo4j database session.
@@ -67,9 +67,9 @@ func (c *neo4jClient) Close() error {
 	return c.driver.Close(context.TODO())
 }
 
-func (c *neo4jClient) CreateNodes(labels []string, properties *[]map[string]interface{}) ([]map[string]interface{}, error) {
-	c.log.Debug("Creating new nodes", "count", len(labels), "params", *properties)
-	c.log.Info("Creating new nodes", "count", len(*properties))
+func (c *neo4jClient) CreateNodes(labels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
+	c.log.Debug("Creating new nodes", "count", len(labels), "params", properties)
+	c.log.Info("Creating new nodes", "count", len(properties))
 	nodeIDs, err := orm.CreateNodes(c.Connect(), labels, properties)
 	if err != nil {
 		c.log.Error("Failed creating nodes on Neo4J", "err", err)

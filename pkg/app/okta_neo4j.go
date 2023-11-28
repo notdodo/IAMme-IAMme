@@ -28,45 +28,43 @@ type oktaNeo4jApp struct {
 }
 
 func (a *oktaNeo4jApp) Dump() {
-	a.fetchAndCreateNodes([]string{"User"}, a.getUsers)
-	a.fetchAndCreateNodes([]string{"Groups"}, a.getGroups)
+	a.createNodes([]string{"User"}, flat(a.getUsers()))
+	a.createNodes([]string{"Group"}, flat(a.getGroups()))
+	a.createNodes([]string{"Rule"}, flat(a.getRules()))
+
+	// var groupIdsList [][]string
+
+	// for _, rule := range rules {
+	// 	groupIds := rule.Actions.AssignUserToGroups.GroupIds
+	// 	groupIdsList = append(groupIdsList, groupIds)
+	// }
 }
 
-func (a *oktaNeo4jApp) getUsers() ([]interface{}, error) {
+func (a *oktaNeo4jApp) getUsers() []*okta.User {
 	users, err := a.oktaClient.GetUsers()
 	if err != nil {
 		a.logger.Error("Error fetching users from Okta:", "err", err)
-		return nil, err
 	}
-	usersInterface := make([]interface{}, len(users))
-	for i, user := range users {
-		usersInterface[i] = user
-	}
-
-	return usersInterface, err
+	return users
 }
 
-func (a *oktaNeo4jApp) getGroups() ([]interface{}, error) {
+func (a *oktaNeo4jApp) getGroups() []*okta.Group {
 	groups, err := a.oktaClient.GetGroups()
 	if err != nil {
 		a.logger.Error("Error fetching groups from Okta:", "err", err)
-		return nil, err
 	}
-	groupsInterface := make([]interface{}, len(groups))
-	for i, group := range groups {
-		groupsInterface[i] = group
-	}
-
-	return groupsInterface, err
+	return groups
 }
 
-func (a *oktaNeo4jApp) fetchAndCreateNodes(nodeLabels []string, oktaClientFunc func() ([]interface{}, error)) {
-	data, err := oktaClientFunc()
+func (a *oktaNeo4jApp) getRules() []*okta.GroupRule {
+	rules, err := a.oktaClient.GetGroupsRules()
 	if err != nil {
-		a.logger.Error("Error fetching data from Okta:", "err", err)
-		return
+		a.logger.Error("Error fetching rules from Okta:", "err", err)
 	}
+	return rules
+}
 
+func flat[T any](data []T) []map[string]interface{} {
 	flatData := make([]map[string]interface{}, 0, len(data))
 	for _, item := range data {
 		flatItem := goflat.FlatStruct(item, goflat.FlattenerConfig{
@@ -76,8 +74,13 @@ func (a *oktaNeo4jApp) fetchAndCreateNodes(nodeLabels []string, oktaClientFunc f
 		})
 		flatData = append(flatData, flatItem)
 	}
+	return flatData
+}
 
-	if _, err := a.neo4jClient.CreateNodes(nodeLabels, &flatData); err != nil {
+func (a *oktaNeo4jApp) createNodes(nodeLabels []string, properties []map[string]interface{}) []map[string]interface{} {
+	nodeIDs, err := a.neo4jClient.CreateNodes(nodeLabels, properties)
+	if err != nil {
 		a.logger.Error("Error creating nodes on Neo4J", "err", err)
 	}
+	return nodeIDs
 }
