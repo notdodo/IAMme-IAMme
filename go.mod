@@ -3,7 +3,7 @@ module github.com/notdodo/IAMme-IAMme
 go 1.20
 
 require (
-	github.com/charmbracelet/log v0.3.0
+	github.com/charmbracelet/log v0.3.1
 	github.com/joho/godotenv v1.5.1
 	github.com/neo4j/neo4j-go-driver/v5 v5.14.0
 	github.com/notdodo/goflat v0.0.0-20231112144802-4032d5f62c2e
