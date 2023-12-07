@@ -21,7 +21,7 @@ var usersCmd = &cobra.Command{
 		if cmd.Flags().Changed(flagDebug) {
 			logger.SetDebugLevel()
 		}
-		oktaNeo4jApp := app.NewOktaNeo4jApp(okta.NewOktaClient(orgUrl, oktaClientToken), neo4jClient)
+		oktaNeo4jApp := iamme.NewOktaNeo4jApp(okta.NewOktaClient(orgUrl, oktaClientToken), neo4jClient)
 		oktaNeo4jApp.Dump()
 	},
 }
