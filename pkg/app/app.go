@@ -8,39 +8,46 @@ import (
 	"github.com/notdodo/goflat"
 )
 
-type OktaNeo4jApp interface {
+type IAMme interface {
 	Dump()
 }
 
-func NewOktaNeo4jApp(oktaClient okta.OktaClient, neo4jClient neo4j.Neo4jClient) OktaNeo4jApp {
+func NewIAMme(oktaClient okta.OktaClient, neo4jClient neo4j.Neo4jClient) IAMme {
 	logger := logging.GetLogManager()
-	return &oktaNeo4jApp{
+	return &iamme{
 		oktaClient:  oktaClient,
 		neo4jClient: neo4jClient,
 		logger:      logger,
 	}
 }
 
-type oktaNeo4jApp struct {
+type iamme struct {
 	oktaClient  okta.OktaClient
 	neo4jClient neo4j.Neo4jClient
 	logger      logging.LogManager
 }
 
-func (a *oktaNeo4jApp) Dump() {
+func (a *iamme) Dump() {
 	a.createNodes([]string{"User"}, flat(a.getUsers()))
 	a.createNodes([]string{"Group"}, flat(a.getGroups()))
-	a.createNodes([]string{"Rule"}, flat(a.getRules()))
+	rules := a.getRules()
+	a.createNodes([]string{"Rule"}, flat(rules))
 
-	// var groupIdsList [][]string
-
-	// for _, rule := range rules {
-	// 	groupIds := rule.Actions.AssignUserToGroups.GroupIds
-	// 	groupIdsList = append(groupIdsList, groupIds)
-	// }
+	groupRules := make([]map[string]interface{}, 0)
+	for _, rule := range rules {
+		for _, gid := range rule.Actions.AssignUserToGroups.GroupIds {
+			groupRules = append(groupRules, map[string]interface{}{
+				"left_key":    "GroupRule_Id",
+				"left_value":  rule.GroupRule.Id,
+				"right_key":   "Group_Id",
+				"right_value": gid,
+			})
+		}
+	}
+	a.createRelations([]string{"GroupRule"}, []string{"Rule"}, []string{"Group"}, groupRules)
 }
 
-func (a *oktaNeo4jApp) getUsers() []*okta.User {
+func (a *iamme) getUsers() []*okta.User {
 	users, err := a.oktaClient.GetUsers()
 	if err != nil {
 		a.logger.Error("Error fetching users from Okta:", "err", err)
@@ -48,7 +55,7 @@ func (a *oktaNeo4jApp) getUsers() []*okta.User {
 	return users
 }
 
-func (a *oktaNeo4jApp) getGroups() []*okta.Group {
+func (a *iamme) getGroups() []*okta.Group {
 	groups, err := a.oktaClient.GetGroups()
 	if err != nil {
 		a.logger.Error("Error fetching groups from Okta:", "err", err)
@@ -56,7 +63,7 @@ func (a *oktaNeo4jApp) getGroups() []*okta.Group {
 	return groups
 }
 
-func (a *oktaNeo4jApp) getRules() []*okta.GroupRule {
+func (a *iamme) getRules() []*okta.GroupRule {
 	rules, err := a.oktaClient.GetGroupsRules()
 	if err != nil {
 		a.logger.Error("Error fetching rules from Okta:", "err", err)
@@ -77,10 +84,18 @@ func flat[T any](data []T) []map[string]interface{} {
 	return flatData
 }
 
-func (a *oktaNeo4jApp) createNodes(nodeLabels []string, properties []map[string]interface{}) []map[string]interface{} {
+func (a *iamme) createNodes(nodeLabels []string, properties []map[string]interface{}) []map[string]interface{} {
 	nodeIDs, err := a.neo4jClient.CreateNodes(nodeLabels, properties)
 	if err != nil {
 		a.logger.Error("Error creating nodes on Neo4J", "err", err)
 	}
 	return nodeIDs
+}
+
+func (a *iamme) createRelations(relationLabels []string, aLabels []string, bLabels []string, properties []map[string]interface{}) []map[string]interface{} {
+	relIDs, err := a.neo4jClient.CreateRelationsAtoB(relationLabels, aLabels, bLabels, properties)
+	if err != nil {
+		a.logger.Error("Error creating nodes on Neo4J", "err", err)
+	}
+	return relIDs
 }

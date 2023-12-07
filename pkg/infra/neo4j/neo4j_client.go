@@ -13,6 +13,7 @@ type Neo4jClient interface {
 	Connect() neo4j.SessionWithContext
 	Close() error
 	CreateNodes([]string, []map[string]interface{}) ([]map[string]interface{}, error)
+	CreateRelationsAtoB([]string, []string, []string, []map[string]interface{}) ([]map[string]interface{}, error)
 }
 
 // Session is an interface for a Neo4j database session.
@@ -37,8 +38,9 @@ func (c *neo4jClient) setUpDb(session neo4j.SessionWithContext) {
 	c.log.Info("Flushing the database")
 	session.Run(context.TODO(), "MATCH (n) DETACH DELETE n;", nil)
 	c.log.Info("Creating indexes")
-	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (u:User) ASSERT u.Id IS UNIQUE;", nil)
-	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (g:Group) ASSERT g.Id IS UNIQUE;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (u:User) ASSERT u.User_Id IS UNIQUE;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (g:Group) ASSERT g.Group_Id IS UNIQUE;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (g:Rule) ASSERT r.GroupRule_Id IS UNIQUE;", nil)
 }
 
 func NewNeo4jClient(dbUri, username, password string) Neo4jClient {
@@ -68,11 +70,23 @@ func (c *neo4jClient) Close() error {
 }
 
 func (c *neo4jClient) CreateNodes(labels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
-	c.log.Debug("Creating new nodes", "count", len(labels), "params", properties)
+	c.log.Debug("Creating new nodes", "count", len(properties), "params", properties)
 	c.log.Info("Creating new nodes", "count", len(properties))
 	nodeIDs, err := orm.CreateNodes(c.Connect(), labels, properties)
 	if err != nil {
 		c.log.Error("Failed creating nodes on Neo4J", "err", err)
 	}
+	c.log.Debug("Created nodes", "count", len(nodeIDs), "ids", nodeIDs)
 	return nodeIDs, err
+}
+
+func (c *neo4jClient) CreateRelationsAtoB(labels []string, aLabels []string, bLabels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
+	c.log.Debug("Creating new relationships", "count", len(properties), "params", properties)
+	c.log.Info("Creating new relationships", "count", len(properties))
+	relIDs, err := orm.CreateRelationsAtoB(c.Connect(), labels, aLabels, bLabels, properties)
+	if err != nil {
+		c.log.Error("Failed creating relationships on Neo4J", "err", err)
+	}
+	c.log.Debug("Created relationships", "count", len(relIDs), "ids", relIDs)
+	return relIDs, err
 }

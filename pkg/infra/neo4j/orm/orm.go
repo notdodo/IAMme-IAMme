@@ -11,13 +11,36 @@ import (
 func CreateNodes(session neo4j.SessionWithContext, labels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
 	ctx := context.TODO()
 	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		createNodeQuery := fmt.Sprintf("UNWIND $propsList AS props CREATE (n:%s) SET n += props RETURN id(n) as id", labelString(labels))
+		createNodeQuery := fmt.Sprintf("UNWIND $propsList AS props CREATE (n:%s) SET n += props RETURN id(n) as id", flatLabels(labels))
 		parameters := map[string]interface{}{"propsList": filteredProperties(properties)}
 		result, err := tx.Run(ctx, createNodeQuery, parameters)
 		if err != nil {
 			return nil, err
 		}
 
+		return collectResults(result, ctx)
+	})
+
+	if err != nil {
+		return nil, err
+	}
+
+	return result.([]map[string]interface{}), err
+}
+
+func CreateRelationsAtoB(session neo4j.SessionWithContext, labels []string, aLabels []string, bLabels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
+	ctx := context.TODO()
+	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
+		createRelationQuery := fmt.Sprintf(`UNWIND $propsList AS props MATCH (a:%s), (b:%s) 
+											WHERE a[props.left_key] = props.left_value AND b[props.right_key] = props.right_value
+											CREATE (a)-[r:%s]->(b)
+											SET r += apoc.map.fromPairs([[props.left_key, props.left_value], [props.right_key, props.right_value]])
+											RETURN id(r) as id`, flatLabels(aLabels), flatLabels(bLabels), flatLabels(labels))
+		parameters := map[string]interface{}{"propsList": properties}
+		result, err := tx.Run(ctx, createRelationQuery, parameters)
+		if err != nil {
+			return nil, err
+		}
 		return collectResults(result, ctx)
 	})
 
@@ -63,6 +86,6 @@ func isPrimitive(value interface{}) bool {
 	}
 }
 
-func labelString(labels []string) string {
+func flatLabels(labels []string) string {
 	return strings.Join(labels, ":")
 }
