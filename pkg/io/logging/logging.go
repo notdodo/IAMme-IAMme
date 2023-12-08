@@ -50,7 +50,6 @@ func (lm logManager) SetDebugLevel() {
 
 func (lm logManager) Debug(message interface{}, keyvals ...interface{}) {
 	lm.logger.Debug(message, keyvals...)
-
 }
 
 func (lm logManager) Info(message interface{}, keyvals ...interface{}) {
