@@ -24,7 +24,7 @@ type oktaClient struct {
 
 type Group struct {
 	*okta.Group
-	*okta.GroupRule
+	Members []*User
 }
 
 type User struct {
@@ -33,7 +33,6 @@ type User struct {
 
 type GroupRule struct {
 	*okta.GroupRule
-	*okta.Group
 }
 
 func NewOktaClient(orgUrl, apiKey string) OktaClient {
@@ -104,12 +103,18 @@ func (c *oktaClient) GetGroupsRules() ([]*GroupRule, error) {
 }
 
 func (c *oktaClient) GetGroupMembers(groupId string) ([]*User, error) {
-	c.log.Info("Getting Okta groups members")
-	members, response, err := c.oktaClient.Group.ListGroupUsers(context.TODO(), groupId, nil)
+	c.log.Info("Getting Okta groups members", "group", groupId)
+	oktaMembers, response, err := c.oktaClient.Group.ListGroupUsers(context.TODO(), groupId, nil)
 	if err != nil {
 		return nil, err
 	}
+	members := make([]*User, 0)
+	for _, member := range oktaMembers {
+		members = append(members, &User{
+			User: member,
+		})
+	}
 	c.log.Info(fmt.Sprintf("Found %d members for group %s", len(members), groupId))
 	c.log.Debug(fmt.Sprintf("Found %d members for group %s", len(members), groupId), "rules", response.Body)
-	return nil, nil // TODO
+	return members, err
 }

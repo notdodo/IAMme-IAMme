@@ -43,6 +43,8 @@ github.com/neo4j/neo4j-go-driver/v5 v5.15.0 h1:oqJZB1p2DE153RjfFbVGQiSDXqMCMEQnr
 github.com/neo4j/neo4j-go-driver/v5 v5.15.0/go.mod h1:Vff8OwT7QpLm7L2yYr85XNWe9Rbqlbeb9asNXJTHO4k=
 github.com/notdodo/goflat v0.0.0-20231112144802-4032d5f62c2e h1:6firFyXtaJkFwuw134Xxo2StfKtR3bbIMV+GgHMEmQA=
 github.com/notdodo/goflat v0.0.0-20231112144802-4032d5f62c2e/go.mod h1:JmppUbrD+0HrVpftael6rhCkaGbh6OJJcLyze4aypTE=
+github.com/notdodo/goflat v0.0.0-20231208101554-82df0b3f176e h1:XumlmFd4I8vjcqGvJ+psQgThsvf8RFNOpW+X4AVCz7s=
+github.com/notdodo/goflat v0.0.0-20231208101554-82df0b3f176e/go.mod h1:JmppUbrD+0HrVpftael6rhCkaGbh6OJJcLyze4aypTE=
 github.com/ohler55/ojg v1.20.3 h1:Z+fnElsA/GbI5oiT726qJaG4Ca9q5l7UO68Qd0PtkD4=
 github.com/okta/okta-sdk-golang/v2 v2.20.0 h1:EDKM+uOPfihOMNwgHMdno+NAsIfyXkVnoFAYVPay0YU=
 github.com/okta/okta-sdk-golang/v2 v2.20.0/go.mod h1:FMy5hN5G8Rd/VoS0XrfyPPhIfOVo78ZK7lvwiQRS2+U=
