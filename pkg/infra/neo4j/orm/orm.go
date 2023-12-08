@@ -54,7 +54,7 @@ func CreateRelationsAtoB(session neo4j.SessionWithContext, labels []string, aLab
 func filteredProperties(properties []map[string]interface{}) []map[string]interface{} {
 	filteredProperties := make([]map[string]interface{}, 0, len(properties))
 	for _, props := range properties {
-		filteredProp := make(map[string]interface{}, 0)
+		filteredProp := make(map[string]interface{})
 		for key, value := range props {
 			if isPrimitive(value) {
 				filteredProp[key] = value

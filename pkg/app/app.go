@@ -4,6 +4,7 @@ import (
 	"github.com/notdodo/IAMme-IAMme/pkg/infra/neo4j"
 	"github.com/notdodo/IAMme-IAMme/pkg/infra/okta"
 	"github.com/notdodo/IAMme-IAMme/pkg/io/logging"
+	"github.com/sourcegraph/conc/iter"
 
 	"github.com/notdodo/goflat"
 )
@@ -34,7 +35,7 @@ func (a *iamme) Dump() {
 	rules := a.getRules()
 	a.createNodes([]string{"Rule"}, flat(rules))
 
-	groupRules := make([]map[string]interface{}, 0)
+	groupRules := make([]map[string]interface{}, 0, len(rules))
 	for _, rule := range rules {
 		for _, gid := range rule.Actions.AssignUserToGroups.GroupIds {
 			groupRules = append(groupRules, map[string]interface{}{
@@ -47,7 +48,7 @@ func (a *iamme) Dump() {
 	}
 	a.createRelations([]string{"GroupRule"}, []string{"Rule"}, []string{"Group"}, groupRules)
 
-	groupMembers := make([]map[string]interface{}, 0)
+	groupMembers := make([]map[string]interface{}, 0, len(groups))
 	for _, group := range groups {
 		for _, gid := range group.Members {
 			groupMembers = append(groupMembers, map[string]interface{}{
@@ -75,37 +76,17 @@ func (a *iamme) getGroups() []*okta.Group {
 		a.logger.Error("Error fetching groups from Okta:", "err", err)
 		return nil
 	}
-
-	groupsWithMembers := make([]*okta.Group, 0, len(groups))
-	memberCh := make(chan *okta.Group, len(groups))
-	errCh := make(chan error, len(groups))
-	defer close(memberCh)
-	defer close(errCh)
-
-	for _, group := range groups {
-		go func(group *okta.Group) {
-			members, err := a.oktaClient.GetGroupMembers(group.Id)
-			if err != nil {
-				errCh <- err
-				return
-			}
-
-			elem := &okta.Group{
-				Group:   group.Group,
-				Members: members,
-			}
-			memberCh <- elem
-		}(group)
-	}
-
-	for i := 0; i < len(groups); i++ {
-		select {
-		case group := <-memberCh:
-			groupsWithMembers = append(groupsWithMembers, group)
-		case err := <-errCh:
+	groupsWithMembers := iter.Map(groups, func(group **okta.Group) *okta.Group {
+		members, err := a.oktaClient.GetGroupMembers((*group).Id)
+		if err != nil {
 			a.logger.Error("Error fetching group members from Okta:", "err", err)
 		}
-	}
+		elem := &okta.Group{
+			Group:   (*group).Group,
+			Members: members,
+		}
+		return elem
+	})
 
 	return groupsWithMembers
 }
@@ -119,15 +100,13 @@ func (a *iamme) getRules() []*okta.GroupRule {
 }
 
 func flat[T any](data []T) []map[string]interface{} {
-	flatData := make([]map[string]interface{}, 0, len(data))
-	for _, item := range data {
-		flatItem := goflat.FlatStruct(item, goflat.FlattenerConfig{
+	flatData := iter.Map(data, func(item *T) map[string]interface{} {
+		return goflat.FlatStruct(*item, goflat.FlattenerConfig{
 			Separator: "_",
 			OmitEmpty: true,
 			OmitNil:   true,
 		})
-		flatData = append(flatData, flatItem)
-	}
+	})
 	return flatData
 }
 

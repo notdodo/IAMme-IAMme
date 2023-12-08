@@ -54,7 +54,7 @@ func (c *oktaClient) GetUsers() ([]*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	users := make([]*User, 0)
+	users := make([]*User, 0, len(oktaUsers))
 	for _, oktaUser := range oktaUsers {
 		users = append(users, &User{
 			User: oktaUser,
@@ -73,7 +73,7 @@ func (c *oktaClient) GetGroups() ([]*Group, error) {
 	if err != nil {
 		return nil, err
 	}
-	groups := make([]*Group, 0)
+	groups := make([]*Group, 0, len(oktaGroups))
 	for _, oktaGroup := range oktaGroups {
 		groups = append(groups, &Group{
 			Group: oktaGroup,
@@ -91,7 +91,7 @@ func (c *oktaClient) GetGroupsRules() ([]*GroupRule, error) {
 	if err != nil {
 		return nil, err
 	}
-	rules := make([]*GroupRule, 0)
+	rules := make([]*GroupRule, 0, len(oktaRules))
 	for _, oktaRule := range oktaRules {
 		rules = append(rules, &GroupRule{
 			GroupRule: oktaRule,
@@ -108,7 +108,7 @@ func (c *oktaClient) GetGroupMembers(groupId string) ([]*User, error) {
 	if err != nil {
 		return nil, err
 	}
-	members := make([]*User, 0)
+	members := make([]*User, 0, len(oktaMembers))
 	for _, member := range oktaMembers {
 		members = append(members, &User{
 			User: member,
