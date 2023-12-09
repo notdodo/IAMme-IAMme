@@ -13,7 +13,7 @@ type Neo4jClient interface {
 	Connect() neo4j.SessionWithContext
 	Close() error
 	CreateNodes([]string, []map[string]interface{}) ([]map[string]interface{}, error)
-	CreateRelationsAtoB([]string, []string, []string, []map[string]interface{}) ([]map[string]interface{}, error)
+	CreateRelationsAtoB(string, []string, []string, []map[string]interface{}) ([]map[string]interface{}, error)
 }
 
 // Session is an interface for a Neo4j database session.
@@ -80,10 +80,10 @@ func (c *neo4jClient) CreateNodes(labels []string, properties []map[string]inter
 	return nodeIDs, err
 }
 
-func (c *neo4jClient) CreateRelationsAtoB(labels []string, aLabels []string, bLabels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
+func (c *neo4jClient) CreateRelationsAtoB(label string, aLabels []string, bLabels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
 	c.log.Debug("Creating new relationships", "count", len(properties), "params", properties)
 	c.log.Info("Creating new relationships", "count", len(properties))
-	relIDs, err := orm.CreateRelationsAtoB(c.Connect(), labels, aLabels, bLabels, properties)
+	relIDs, err := orm.CreateRelationsAtoB(c.Connect(), label, aLabels, bLabels, properties)
 	if err != nil {
 		c.log.Error("Failed creating relationships on Neo4J", "err", err)
 	}
