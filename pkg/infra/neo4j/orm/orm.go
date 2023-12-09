@@ -11,8 +11,7 @@ import (
 func CreateNodes(session neo4j.SessionWithContext, labels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
 	ctx := context.TODO()
 	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		createNodeQuery := fmt.Sprintf("UNWIND $propsList AS props CREATE (n:%s) SET n += props RETURN id(n) as id", flatLabels(labels))
-		parameters := map[string]interface{}{"propsList": filteredProperties(properties)}
+		createNodeQuery, parameters := createNodesQuery(labels, properties)
 		result, err := tx.Run(ctx, createNodeQuery, parameters)
 		if err != nil {
 			return nil, err
@@ -28,15 +27,18 @@ func CreateNodes(session neo4j.SessionWithContext, labels []string, properties [
 	return result.([]map[string]interface{}), err
 }
 
-func CreateRelationsAtoB(session neo4j.SessionWithContext, labels []string, aLabels []string, bLabels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
+func createNodesQuery(labels []string, properties []map[string]interface{}) (string, map[string]interface{}) {
+	query := fmt.Sprintf("UNWIND $propsList AS props CREATE (n:%s) SET n += props RETURN id(n) as id", flatLabels(labels))
+	parameters := map[string]interface{}{"propsList": filteredProperties(properties)}
+	query = strings.Replace(query, "\t", "", -1)
+	query = strings.Replace(query, "\n", "", -1)
+	return oneLineQuery(query), parameters
+}
+
+func CreateRelationsAtoB(session neo4j.SessionWithContext, label string, aLabels []string, bLabels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
 	ctx := context.TODO()
 	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
-		createRelationQuery := fmt.Sprintf(`UNWIND $propsList AS props MATCH (a:%s), (b:%s) 
-											WHERE a[props.left_key] = props.left_value AND b[props.right_key] = props.right_value
-											CREATE (a)-[r:%s]->(b)
-											SET r += apoc.map.fromPairs([[props.left_key, props.left_value], [props.right_key, props.right_value]])
-											RETURN id(r) as id`, flatLabels(aLabels), flatLabels(bLabels), flatLabels(labels))
-		parameters := map[string]interface{}{"propsList": properties}
+		createRelationQuery, parameters := createRelationsQuery(label, aLabels, bLabels, properties)
 		result, err := tx.Run(ctx, createRelationQuery, parameters)
 		if err != nil {
 			return nil, err
@@ -49,6 +51,16 @@ func CreateRelationsAtoB(session neo4j.SessionWithContext, labels []string, aLab
 	}
 
 	return result.([]map[string]interface{}), err
+}
+
+func createRelationsQuery(label string, aLabels []string, bLabels []string, properties []map[string]interface{}) (string, map[string]interface{}) {
+	query := fmt.Sprintf(`UNWIND $propsList AS props MATCH (a:%s), (b:%s) 
+							WHERE a[props.left_key] = props.left_value AND b[props.right_key] = props.right_value
+							CREATE (a)-[r:%s]->(b)
+							SET r += apoc.map.fromPairs([[props.left_key, props.left_value], [props.right_key, props.right_value]])
+							RETURN id(r) as id`, flatLabels(aLabels), flatLabels(bLabels), label)
+	parameters := map[string]interface{}{"propsList": properties}
+	return oneLineQuery(query), parameters
 }
 
 func filteredProperties(properties []map[string]interface{}) []map[string]interface{} {
@@ -88,4 +100,11 @@ func isPrimitive(value interface{}) bool {
 
 func flatLabels(labels []string) string {
 	return strings.Join(labels, ":")
+}
+
+func oneLineQuery(query string) string {
+	query = strings.Replace(query, "\t", "", -1)
+	query = strings.Replace(query, "\n", " ", -1)
+	query = strings.Replace(query, "  ", " ", -1)
+	return query
 }

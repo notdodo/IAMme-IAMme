@@ -46,7 +46,7 @@ func (a *iamme) Dump() {
 			})
 		}
 	}
-	a.createRelations([]string{"GroupRule"}, []string{"Rule"}, []string{"Group"}, groupRules)
+	a.createRelations("GroupRule", []string{"Rule"}, []string{"Group"}, groupRules)
 
 	groupMembers := make([]map[string]interface{}, 0, len(groups))
 	for _, group := range groups {
@@ -59,7 +59,7 @@ func (a *iamme) Dump() {
 			})
 		}
 	}
-	a.createRelations([]string{"GroupMember"}, []string{"User"}, []string{"Group"}, groupMembers)
+	a.createRelations("GroupMember", []string{"User"}, []string{"Group"}, groupMembers)
 }
 
 func (a *iamme) getUsers() []*okta.User {
@@ -118,8 +118,8 @@ func (a *iamme) createNodes(nodeLabels []string, properties []map[string]interfa
 	return nodeIDs
 }
 
-func (a *iamme) createRelations(relationLabels []string, aLabels []string, bLabels []string, properties []map[string]interface{}) []map[string]interface{} {
-	relIDs, err := a.neo4jClient.CreateRelationsAtoB(relationLabels, aLabels, bLabels, properties)
+func (a *iamme) createRelations(relationLabel string, aLabels []string, bLabels []string, properties []map[string]interface{}) []map[string]interface{} {
+	relIDs, err := a.neo4jClient.CreateRelationsAtoB(relationLabel, aLabels, bLabels, properties)
 	if err != nil {
 		a.logger.Error("Error creating nodes on Neo4J", "err", err)
 	}
