@@ -72,6 +72,7 @@ func (a *iamme) getUsers() []*User {
 
 	for _, user := range oktaUsers {
 		users = append(users, &User{
+			Id:   user.Id,
 			User: user,
 		})
 	}
@@ -92,10 +93,12 @@ func (a *iamme) getGroupsWithMembers() []*Group {
 		users := make([]*User, 0, len(members))
 		for _, member := range members {
 			users = append(users, &User{
+				Id:   member.Id,
 				User: member,
 			})
 		}
 		return &Group{
+			Id:      (*group).Id,
 			Group:   *group,
 			Members: users,
 		}
@@ -113,6 +116,7 @@ func (a *iamme) getRules() []*GroupRule {
 
 	for _, rule := range oktaRules {
 		rules = append(rules, &GroupRule{
+			Id:        rule.Id,
 			GroupRule: rule,
 		})
 	}
