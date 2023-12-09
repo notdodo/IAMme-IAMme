@@ -1,0 +1,14 @@
+.git
+.github
+README.md
+Makefile
+.env_example
+.vscode
+.gitignore
+docker-compose.yaml
+Dockerfile
+*.json
+dist
+iamme*
+IAMme-IAMme*
+*.sarif

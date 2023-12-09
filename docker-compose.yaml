@@ -17,7 +17,7 @@ services:
       - CAP_SETUID
     ports:
       - "127.0.0.1:7474:7474"
-      - "127.0.0.1:7687:7687"
+      - "0.0.0.0:7687:7687"
     volumes:
       - okta_Data:/data
     environment:
