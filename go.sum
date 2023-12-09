@@ -40,8 +40,8 @@ github.com/muesli/termenv v0.15.2 h1:GohcuySI0QmI3wN8Ok9PtKGkgkFIk7y6Vpb5PvrY+Wo
 github.com/muesli/termenv v0.15.2/go.mod h1:Epx+iuz8sNs7mNKhxzH4fWXGNpZwUaJKRS1noLXviQ8=
 github.com/neo4j/neo4j-go-driver/v5 v5.15.0 h1:oqJZB1p2DE153RjfFbVGQiSDXqMCMEQnrZW+ZI86o58=
 github.com/neo4j/neo4j-go-driver/v5 v5.15.0/go.mod h1:Vff8OwT7QpLm7L2yYr85XNWe9Rbqlbeb9asNXJTHO4k=
-github.com/notdodo/goflat v0.0.0-20231209132000-74646516c93c h1:RjLapt6xuqt2IsYpkWfxuJGdOegnBMWdDDcOz6bjyeI=
-github.com/notdodo/goflat v0.0.0-20231209132000-74646516c93c/go.mod h1:JmppUbrD+0HrVpftael6rhCkaGbh6OJJcLyze4aypTE=
+github.com/notdodo/goflat/v2 v2.0.1 h1:qMGWwgkKKe7oH9tf5l+GoWG9nOMG1lfi/MsER51tPgg=
+github.com/notdodo/goflat/v2 v2.0.1/go.mod h1:hoRI70ElS4dEEjmz5krDAZvNGJzzd74XSaAipFmc9+4=
 github.com/ohler55/ojg v1.20.3 h1:Z+fnElsA/GbI5oiT726qJaG4Ca9q5l7UO68Qd0PtkD4=
 github.com/okta/okta-sdk-golang/v2 v2.20.0 h1:EDKM+uOPfihOMNwgHMdno+NAsIfyXkVnoFAYVPay0YU=
 github.com/okta/okta-sdk-golang/v2 v2.20.0/go.mod h1:FMy5hN5G8Rd/VoS0XrfyPPhIfOVo78ZK7lvwiQRS2+U=

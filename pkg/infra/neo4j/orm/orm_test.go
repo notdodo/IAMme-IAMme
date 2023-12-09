@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/notdodo/goflat"
+	"github.com/notdodo/goflat/v2"
 )
 
 type User struct {
