@@ -7,6 +7,7 @@ import (
 	"github.com/sourcegraph/conc/iter"
 
 	"github.com/notdodo/goflat"
+	oktaSdk "github.com/okta/okta-sdk-golang/v2/okta"
 )
 
 type IAMme interface {
@@ -30,7 +31,7 @@ type iamme struct {
 
 func (a *iamme) Dump() {
 	a.createNodes([]string{"User"}, flat(a.getUsers()))
-	groups := a.getGroups()
+	groups := a.getGroupsWithMembers()
 	a.createNodes([]string{"Group"}, flat(groups))
 	rules := a.getRules()
 	a.createNodes([]string{"Rule"}, flat(rules))
@@ -62,39 +63,58 @@ func (a *iamme) Dump() {
 	a.createRelations("GroupMember", []string{"User"}, []string{"Group"}, groupMembers)
 }
 
-func (a *iamme) getUsers() []*okta.User {
-	users, err := a.oktaClient.GetUsers()
+func (a *iamme) getUsers() []*User {
+	oktaUsers, err := a.oktaClient.GetUsers()
+	users := make([]*User, 0, len(oktaUsers))
 	if err != nil {
 		a.logger.Error("Error fetching users from Okta:", "err", err)
+	}
+
+	for _, user := range oktaUsers {
+		users = append(users, &User{
+			User: user,
+		})
 	}
 	return users
 }
 
-func (a *iamme) getGroups() []*okta.Group {
-	groups, err := a.oktaClient.GetGroups()
+func (a *iamme) getGroupsWithMembers() []*Group {
+	oktaGroups, err := a.oktaClient.GetGroups()
 	if err != nil {
 		a.logger.Error("Error fetching groups from Okta:", "err", err)
 		return nil
 	}
-	groupsWithMembers := iter.Map(groups, func(group **okta.Group) *okta.Group {
+	groupsWithMembers := iter.Map(oktaGroups, func(group **oktaSdk.Group) *Group {
 		members, err := a.oktaClient.GetGroupMembers((*group).Id)
 		if err != nil {
 			a.logger.Error("Error fetching group members from Okta:", "err", err)
 		}
-		elem := &okta.Group{
-			Group:   (*group).Group,
-			Members: members,
+		users := make([]*User, 0, len(members))
+		for _, member := range members {
+			users = append(users, &User{
+				User: member,
+			})
 		}
-		return elem
+		return &Group{
+			Group:   *group,
+			Members: users,
+		}
 	})
 
 	return groupsWithMembers
 }
 
-func (a *iamme) getRules() []*okta.GroupRule {
-	rules, err := a.oktaClient.GetGroupsRules()
+func (a *iamme) getRules() []*GroupRule {
+	oktaRules, err := a.oktaClient.GetGroupsRules()
+	rules := make([]*GroupRule, 0, len(oktaRules))
 	if err != nil {
 		a.logger.Error("Error fetching rules from Okta:", "err", err)
+	}
+
+	for _, rule := range oktaRules {
+		rules = append(rules, &GroupRule{
+			GroupRule: rule,
+		})
 	}
 	return rules
 }
