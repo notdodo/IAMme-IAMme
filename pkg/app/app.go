@@ -6,7 +6,7 @@ import (
 	"github.com/notdodo/IAMme-IAMme/pkg/io/logging"
 	"github.com/sourcegraph/conc/iter"
 
-	"github.com/notdodo/goflat"
+	"github.com/notdodo/goflat/v2"
 	oktaSdk "github.com/okta/okta-sdk-golang/v2/okta"
 )
 
