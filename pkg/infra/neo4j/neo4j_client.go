@@ -38,9 +38,9 @@ func (c *neo4jClient) setUpDb(session neo4j.SessionWithContext) {
 	c.log.Info("Flushing the database")
 	session.Run(context.TODO(), "MATCH (n) DETACH DELETE n;", nil)
 	c.log.Info("Creating indexes")
-	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (u:User) ASSERT u.User_Id IS UNIQUE;", nil)
-	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (g:Group) ASSERT g.Group_Id IS UNIQUE;", nil)
-	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS ON (g:Rule) ASSERT r.GroupRule_Id IS UNIQUE;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS FOR (u:User) REQUIRE u.User_Id IS UNIQUE;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS FOR (g:Group) REQUIRE g.Group_Id IS UNIQUE;", nil)
+	session.Run(context.TODO(), "CREATE CONSTRAINT IF NOT EXISTS FOR (r:Rule) REQUIRE r.GroupRule_Id IS UNIQUE;", nil)
 }
 
 func NewNeo4jClient(dbUri, username, password string) Neo4jClient {
