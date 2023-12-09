@@ -50,16 +50,28 @@ func NewOktaClient(orgUrl, apiKey string) OktaClient {
 
 func (c *oktaClient) GetUsers() ([]*User, error) {
 	c.log.Info("Getting Okta users")
+	var users []*User
+	appendUsers := func(oktaUsers []*okta.User) {
+		for _, oktaUser := range oktaUsers {
+			users = append(users, &User{
+				User: oktaUser,
+			})
+		}
+	}
+
 	oktaUsers, response, err := c.oktaClient.User.ListUsers(context.TODO(), nil)
 	if err != nil {
 		return nil, err
 	}
-	users := make([]*User, 0, len(oktaUsers))
-	for _, oktaUser := range oktaUsers {
-		users = append(users, &User{
-			User: oktaUser,
-		})
+	appendUsers(oktaUsers)
+	for response.HasNextPage() {
+		response, err = response.Next(context.TODO(), &oktaUsers)
+		if err != nil {
+			return nil, err
+		}
+		appendUsers(oktaUsers)
 	}
+
 	c.log.Info(fmt.Sprintf("Found %d users", len(users)))
 	c.log.Debug(fmt.Sprintf("Found %d users", len(users)), "users", response.Body)
 	return users, nil
@@ -103,7 +115,7 @@ func (c *oktaClient) GetGroupsRules() ([]*GroupRule, error) {
 }
 
 func (c *oktaClient) GetGroupMembers(groupId string) ([]*User, error) {
-	c.log.Info("Getting Okta groups members", "group", groupId)
+	c.log.Info("Getting Okta group members", "group", groupId)
 	oktaMembers, response, err := c.oktaClient.Group.ListGroupUsers(context.TODO(), groupId, nil)
 	if err != nil {
 		return nil, err
@@ -115,6 +127,6 @@ func (c *oktaClient) GetGroupMembers(groupId string) ([]*User, error) {
 		})
 	}
 	c.log.Info(fmt.Sprintf("Found %d members for group %s", len(members), groupId))
-	c.log.Debug(fmt.Sprintf("Found %d members for group %s", len(members), groupId), "rules", response.Body)
+	c.log.Debug(fmt.Sprintf("Found %d members for group %s", len(members), groupId), "members", response.Body)
 	return members, err
 }
