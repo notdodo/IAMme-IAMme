@@ -39,9 +39,7 @@ func (c *oktaClient) GetUsers() ([]*okta.User, error) {
 	c.log.Info("Getting Okta users")
 	var users []*okta.User
 	appendUsers := func(oktaUsers []*okta.User) {
-		for _, oktaUser := range oktaUsers {
-			users = append(users, oktaUser)
-		}
+		users = append(users, oktaUsers...)
 	}
 
 	oktaUsers, response, err := c.oktaClient.User.ListUsers(context.TODO(), nil)
