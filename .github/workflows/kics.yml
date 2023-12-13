@@ -3,12 +3,12 @@ on:
   push:
     branches:
       - main
-    paths:
+    paths-ignore:
       - "**.go"
   pull_request:
     branches:
       - main
-    paths:
+    paths-ignore:
       - "**.go"
 
 concurrency:
