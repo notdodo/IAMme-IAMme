@@ -1,14 +1,14 @@
-name: Security Scan
+name: Kics Scan
 on:
   push:
     branches:
       - main
-    paths:
+    paths-ignore:
       - "**.go"
   pull_request:
     branches:
       - main
-    paths:
+    paths-ignore:
       - "**.go"
 
 concurrency:
@@ -26,14 +26,15 @@ jobs:
         # v4.1.1
         with:
           fetch-depth: 0
-
-      - name: Run Gosec Security Scanner
+      - name: run kics Scan
         # master to fetch latest checks
         # kics-scan ignore-line
-        uses: securego/gosec@master
+        uses: Checkmarx/kics-github-action@v1.7.0
         with:
-          args: "-no-fail -fmt sarif -out results.sarif ./..."
-
+          path: .
+          output_path: results.sarif
+          fail_on: high,medium
+          output_formats: 'sarif'
       - name: Upload SARIF file
         uses: github/codeql-action/upload-sarif@4b6aa0b07da05d6e43d0e5f9c8596a6532ce1c85
         # v2.15.3

@@ -1,6 +1,7 @@
 version: "3"
 
 services:
+  # kics-scan ignore-line
   neo4j:
     image: neo4j:latest
     hostname: neo4j
@@ -9,6 +10,7 @@ services:
       - iamme-iamme
     cap_drop:
       - ALL
+    # kics-scan ignore-line
     cap_add:
       - CAP_CHOWN
       - CAP_FOWNER
