@@ -23,7 +23,7 @@ services:
     volumes:
       - okta_Data:/data
     environment:
-      NEO4J_PLUGINS: '["apoc"]'
+      NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
       NEO4J_AUTH: $NEO4J_AUTH
       NEO4J_server_memory_heap_initial__size: ${NEO4J_server_memory_heap_initial__size}
       NEO4J_server_memory_heap_max__size: ${NEO4J_server_memory_heap_max__size}
