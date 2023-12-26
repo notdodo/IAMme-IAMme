@@ -5,11 +5,13 @@ on:
       - main
     paths-ignore:
       - "**.go"
+      - "**.md"
   pull_request:
     branches:
       - main
     paths-ignore:
       - "**.go"
+      - "**.md"
 
 concurrency:
   group: iamme-gosec-${{ github.ref }}
