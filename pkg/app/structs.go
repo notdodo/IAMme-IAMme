@@ -17,3 +17,8 @@ type GroupRule struct {
 	Id string
 	*okta.GroupRule
 }
+
+type Application struct {
+	Id string
+	*okta.Application
+}

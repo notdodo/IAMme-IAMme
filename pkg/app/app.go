@@ -30,10 +30,10 @@ type iamme struct {
 }
 
 func (a *iamme) Dump() {
-	a.createNodes([]string{"User"}, flat(a.getUsers()))
-	groups := a.getGroupsWithMembers()
+	a.createNodes([]string{"User"}, flat(a.users()))
+	groups := a.groupsWithMembers()
 	a.createNodes([]string{"Group"}, flat(groups))
-	rules := a.getRules()
+	rules := a.rules()
 	a.createNodes([]string{"Rule"}, flat(rules))
 
 	groupRules := make([]map[string]interface{}, 0, len(rules))
@@ -61,10 +61,12 @@ func (a *iamme) Dump() {
 		}
 	}
 	a.createRelations("GroupMember", []string{"User"}, []string{"Group"}, groupMembers)
+
+	a.createNodes([]string{"Application"}, flat(a.applications()))
 }
 
-func (a *iamme) getUsers() []*User {
-	oktaUsers, err := a.oktaClient.GetUsers()
+func (a *iamme) users() []*User {
+	oktaUsers, err := a.oktaClient.Users()
 	users := make([]*User, 0, len(oktaUsers))
 	if err != nil {
 		a.logger.Error("Error fetching users from Okta:", "err", err)
@@ -79,14 +81,14 @@ func (a *iamme) getUsers() []*User {
 	return users
 }
 
-func (a *iamme) getGroupsWithMembers() []*Group {
-	oktaGroups, err := a.oktaClient.GetGroups()
+func (a *iamme) groupsWithMembers() []*Group {
+	oktaGroups, err := a.oktaClient.Groups()
 	if err != nil {
 		a.logger.Error("Error fetching groups from Okta:", "err", err)
 		return nil
 	}
 	groupsWithMembers := iter.Map(oktaGroups, func(group **oktaSdk.Group) *Group {
-		members, err := a.oktaClient.GetGroupMembers((*group).Id)
+		members, err := a.oktaClient.GroupMembers((*group).Id)
 		if err != nil {
 			a.logger.Error("Error fetching group members from Okta:", "err", err)
 		}
@@ -107,8 +109,8 @@ func (a *iamme) getGroupsWithMembers() []*Group {
 	return groupsWithMembers
 }
 
-func (a *iamme) getRules() []*GroupRule {
-	oktaRules, err := a.oktaClient.GetGroupsRules()
+func (a *iamme) rules() []*GroupRule {
+	oktaRules, err := a.oktaClient.GroupsRules()
 	rules := make([]*GroupRule, 0, len(oktaRules))
 	if err != nil {
 		a.logger.Error("Error fetching rules from Okta:", "err", err)
@@ -121,6 +123,22 @@ func (a *iamme) getRules() []*GroupRule {
 		})
 	}
 	return rules
+}
+
+func (a *iamme) applications() []*Application {
+	oktaApps, err := a.oktaClient.Applications()
+	apps := make([]*Application, 0, len(oktaApps))
+	if err != nil {
+		a.logger.Error("Error fetching rules from Okta:", "err", err)
+	}
+
+	for _, app := range oktaApps {
+		apps = append(apps, &Application{
+			Id:          app.(*oktaSdk.Application).Id,
+			Application: app.(*oktaSdk.Application),
+		})
+	}
+	return apps
 }
 
 func flat[T any](data []T) []map[string]interface{} {
