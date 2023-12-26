@@ -11,10 +11,11 @@ import (
 
 // OktaClient is an interface for interacting with Okta resources.
 type OktaClient interface {
-	GetUsers() ([]*okta.User, error)
-	GetGroups() ([]*okta.Group, error)
-	GetGroupsRules() ([]*okta.GroupRule, error)
-	GetGroupMembers(string) ([]*okta.User, error)
+	Users() ([]*okta.User, error)
+	Groups() ([]*okta.Group, error)
+	GroupsRules() ([]*okta.GroupRule, error)
+	GroupMembers(string) ([]*okta.User, error)
+	Applications() ([]okta.App, error)
 }
 
 type oktaClient struct {
@@ -35,7 +36,7 @@ func NewOktaClient(orgUrl, apiKey string) OktaClient {
 	}
 }
 
-func (c *oktaClient) GetUsers() ([]*okta.User, error) {
+func (c *oktaClient) Users() ([]*okta.User, error) {
 	c.log.Info("Getting Okta users")
 	var users []*okta.User
 	appendUsers := func(oktaUsers []*okta.User) {
@@ -60,7 +61,7 @@ func (c *oktaClient) GetUsers() ([]*okta.User, error) {
 	return users, nil
 }
 
-func (c *oktaClient) GetGroups() ([]*okta.Group, error) {
+func (c *oktaClient) Groups() ([]*okta.Group, error) {
 	c.log.Info("Getting Okta groups")
 	oktaGroups, response, err := c.oktaClient.Group.ListGroups(context.TODO(), &query.Params{
 		Expand: "stats,app",
@@ -74,7 +75,7 @@ func (c *oktaClient) GetGroups() ([]*okta.Group, error) {
 	return oktaGroups, nil
 }
 
-func (c *oktaClient) GetGroupsRules() ([]*okta.GroupRule, error) {
+func (c *oktaClient) GroupsRules() ([]*okta.GroupRule, error) {
 	c.log.Info("Getting Okta groups rules")
 	oktaRules, response, err := c.oktaClient.Group.ListGroupRules(context.TODO(), nil)
 	if err != nil {
@@ -86,7 +87,7 @@ func (c *oktaClient) GetGroupsRules() ([]*okta.GroupRule, error) {
 	return oktaRules, nil
 }
 
-func (c *oktaClient) GetGroupMembers(groupId string) ([]*okta.User, error) {
+func (c *oktaClient) GroupMembers(groupId string) ([]*okta.User, error) {
 	c.log.Info("Getting Okta group members", "group", groupId)
 	oktaMembers, response, err := c.oktaClient.Group.ListGroupUsers(context.TODO(), groupId, nil)
 	if err != nil {
@@ -95,4 +96,15 @@ func (c *oktaClient) GetGroupMembers(groupId string) ([]*okta.User, error) {
 	c.log.Info(fmt.Sprintf("Found %d members for group %s", len(oktaMembers), groupId))
 	c.log.Debug(fmt.Sprintf("Found %d members for group %s", len(oktaMembers), groupId), "members", response.Body)
 	return oktaMembers, err
+}
+
+func (c *oktaClient) Applications() ([]okta.App, error) {
+	c.log.Info("Getting Okta applications")
+	oktaApps, response, err := c.oktaClient.Application.ListApplications(context.TODO(), nil)
+	if err != nil {
+		return nil, err
+	}
+	c.log.Info(fmt.Sprintf("Found %d applications", len(oktaApps)))
+	c.log.Debug(fmt.Sprintf("Found %d applications", len(oktaApps)), "applications", response.Body)
+	return oktaApps, err
 }

@@ -22,14 +22,16 @@ services:
       - "0.0.0.0:7687:7687"
     volumes:
       - okta_Data:/data
+      - ./backup:/backup:rw
     environment:
       NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
       NEO4J_AUTH: $NEO4J_AUTH
+      NEO4J_apoc_export_file_enabled: "true"
       NEO4J_server_memory_heap_initial__size: ${NEO4J_server_memory_heap_initial__size}
       NEO4J_server_memory_heap_max__size: ${NEO4J_server_memory_heap_max__size}
       NEO4J_server_memory_pagecache_size: ${NEO4J_server_memory_pagecache_size}
-      NEO4J_server_jvm_additional: "-XX:+ExitOnOutOfMemoryError"
-      NEO4J_initial_dbms_default__database: "okta"
+      NEO4J_server_jvm_additional: -XX:+ExitOnOutOfMemoryError
+      NEO4J_initial_dbms_default__database: okta
       NEO4J_dbms_cypher_forbid__shortestpath__common__nodes: "false"
     security_opt:
       - no-new-privileges:true
