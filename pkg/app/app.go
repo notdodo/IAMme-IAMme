@@ -62,7 +62,20 @@ func (a *iamme) Dump() {
 	}
 	a.createRelations("GroupMember", []string{"User"}, []string{"Group"}, groupMembers)
 
-	a.createNodes([]string{"Application"}, flat(a.applications()))
+	applications := a.applicationsWithGroupAssigments()
+	groupAssignments := make([]map[string]interface{}, 0, len(applications))
+	for _, application := range applications {
+		for _, ga := range application.GroupAssignments {
+			groupAssignments = append(groupAssignments, map[string]interface{}{
+				"left_key":    "Group_Id",
+				"left_value":  ga.Id,
+				"right_key":   "Application_Id",
+				"right_value": application.Id,
+			})
+		}
+	}
+	a.createNodes([]string{"Application"}, flat(applications))
+	a.createRelations("GroupAssignment", []string{"Group"}, []string{"Application"}, groupAssignments)
 }
 
 func (a *iamme) users() []*User {
@@ -125,20 +138,31 @@ func (a *iamme) rules() []*GroupRule {
 	return rules
 }
 
-func (a *iamme) applications() []*Application {
+func (a *iamme) applicationsWithGroupAssigments() []*Application {
 	oktaApps, err := a.oktaClient.Applications()
-	apps := make([]*Application, 0, len(oktaApps))
 	if err != nil {
-		a.logger.Error("Error fetching rules from Okta:", "err", err)
+		a.logger.Error("Error fetching applications from Okta:", "err", err)
 	}
 
-	for _, app := range oktaApps {
-		apps = append(apps, &Application{
-			Id:          app.(*oktaSdk.Application).Id,
-			Application: app.(*oktaSdk.Application),
-		})
-	}
-	return apps
+	appWithGroups := iter.Map(oktaApps, func(app *oktaSdk.App) *Application {
+		application := (*app).(*oktaSdk.Application)
+		groupAss, err := a.oktaClient.ApplicationGroupAssignments(application.Id)
+		if err != nil {
+			a.logger.Error("Error fetching group assignments from Okta:", "err", err)
+		}
+		groups := make([]*Group, 0, len(groupAss))
+		for _, group := range groupAss {
+			groups = append(groups, &Group{
+				Id: group.Id,
+			})
+		}
+		return &Application{
+			Id:               application.Id,
+			Application:      application,
+			GroupAssignments: groups,
+		}
+	})
+	return appWithGroups
 }
 
 func flat[T any](data []T) []map[string]interface{} {

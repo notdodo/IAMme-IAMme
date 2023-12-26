@@ -21,4 +21,5 @@ type GroupRule struct {
 type Application struct {
 	Id string
 	*okta.Application
+	GroupAssignments []*Group
 }
