@@ -16,6 +16,7 @@ type OktaClient interface {
 	GroupsRules() ([]*okta.GroupRule, error)
 	GroupMembers(string) ([]*okta.User, error)
 	Applications() ([]okta.App, error)
+	ApplicationGroupAssignments(string) ([]*okta.ApplicationGroupAssignment, error)
 }
 
 type oktaClient struct {
@@ -107,4 +108,15 @@ func (c *oktaClient) Applications() ([]okta.App, error) {
 	c.log.Info(fmt.Sprintf("Found %d applications", len(oktaApps)))
 	c.log.Debug(fmt.Sprintf("Found %d applications", len(oktaApps)), "applications", response.Body)
 	return oktaApps, err
+}
+
+func (c *oktaClient) ApplicationGroupAssignments(appId string) ([]*okta.ApplicationGroupAssignment, error) {
+	c.log.Info("Getting Okta application group assigments", "application", appId)
+	oktaGroups, response, err := c.oktaClient.Application.ListApplicationGroupAssignments(context.TODO(), appId, nil)
+	if err != nil {
+		return nil, err
+	}
+	c.log.Info(fmt.Sprintf("Found %d group assigments for application %s", len(oktaGroups), appId))
+	c.log.Debug(fmt.Sprintf("Found %d group assigments for application %s", len(oktaGroups), appId), "groupassignments", response.Body)
+	return oktaGroups, err
 }
