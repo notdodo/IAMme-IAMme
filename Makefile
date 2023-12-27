@@ -41,7 +41,8 @@ clean: stop-containers
 	@rm -rf ./${OUT_DIR}
 	@rm -f ./${OUT_PREFIX}
 
-.PHONY: compile
+.PHONY: compile all
+all: compile
 compile: build
 	GOOS=freebsd GOARCH=amd64 go build ${BUILD_FLAGS} -o ${OUT_DIR}/${OUT_PREFIX}-freebsd-amd64
 	GOOS=linux GOARCH=amd64 go build ${BUILD_FLAGS} -o ${OUT_DIR}/${OUT_PREFIX}-linux-amd64
@@ -73,3 +74,8 @@ stop-containers:
 	@docker compose stop
 	@docker compose down -v
 	@docker compose rm -fv
+
+.PHONY: test tests
+test: tests
+tests:
+	go test ./...
