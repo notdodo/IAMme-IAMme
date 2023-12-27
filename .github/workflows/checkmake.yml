@@ -23,7 +23,7 @@ concurrency:
 
 jobs:
   checkmake:
-    name: run-install-checkmake
+    name: Check Makefile
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
@@ -37,4 +37,4 @@ jobs:
       - name: checkmake
         run: |
           go install github.com/mrtazz/checkmake/cmd/checkmake@latest
-          checkmake Makefile
+          checkmake Makefile --debug
