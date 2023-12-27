@@ -14,7 +14,7 @@ on:
       - "**.md"
 
 concurrency:
-  group: iamme-gosec-${{ github.ref }}
+  group: iamme-kics-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:

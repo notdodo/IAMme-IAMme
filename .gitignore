@@ -2,7 +2,7 @@
 !.vscode/*.json
 *.json
 .env
-dist
+dist/
 iamme*
 IAMme-IAMme*
 *.sarif

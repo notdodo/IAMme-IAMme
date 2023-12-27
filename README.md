@@ -51,7 +51,7 @@ IAMme can be particularly helpful for Okta administrators in identifying:
 - high numbers of identical rules
 - incorrectly configured rules
 
-Although similar information can be obtained using tools like `steampipe``, IAMme offers the capability to correlate and visualize these details using Neo4j.
+Although similar information can be obtained using tools like `steampipe`, IAMme offers the capability to correlate and visualize these details using Neo4j.
 
 Feel free to leverage IAMme for:
 
