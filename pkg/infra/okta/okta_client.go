@@ -30,7 +30,7 @@ func NewOktaClient(orgUrl, apiKey string) OktaClient {
 	if err != nil {
 		logger.Error("Invalid Okta login", "err", err)
 	}
-	logger.Info("Valid Okta client", "orgUrl", orgUrl)
+	logger.Info("Valid Okta client", "org_url", orgUrl)
 	return &oktaClient{
 		oktaClient: client,
 		log:        logger,
