@@ -1,0 +1,24 @@
+name: Gitleaks
+on:
+  pull_request:
+  push:
+
+concurrency:
+  group: iamme-gitleaks-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    name: gitleaks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11
+        # v4.1.1
+        with:
+          fetch-depth: 0
+      - name: gitleaks
+        # bind to major to use latests checks
+        # kics-scan ignore-line
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

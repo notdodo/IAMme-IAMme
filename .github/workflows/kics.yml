@@ -1,4 +1,4 @@
-name: Kics Scan
+name: Infrastructure Security Scan
 on:
   push:
     branches:
@@ -29,9 +29,7 @@ jobs:
         with:
           fetch-depth: 0
       - name: run kics Scan
-        # master to fetch latest checks
-        # kics-scan ignore-line
-        uses: Checkmarx/kics-github-action@v1.7.0
+        uses: Checkmarx/kics-github-action@8a44970e3d2eca668be41abe9d4e06709c3b3609
         with:
           path: .
           output_path: results.sarif
