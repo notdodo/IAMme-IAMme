@@ -3,10 +3,6 @@ on:
   pull_request:
   push:
 
-concurrency:
-  group: iamme-gitleaks-${{ github.ref }}
-  cancel-in-progress: true
-
 jobs:
   scan:
     name: gitleaks
