@@ -1,0 +1,26 @@
+name: Infrastructure Security Scan
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - "**.go"
+      - "**.md"
+      - "go.mod"
+      - "go.sum"
+  pull_request:
+    branches:
+      - main
+    paths-ignore:
+      - "**.go"
+      - "**.md"
+      - "go.mod"
+      - "go.sum"
+
+concurrency:
+  group: iamme-kics-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  infra-security-scan:
+    uses: notdodo/github-actions/.github/workflows/infra-security-scan.yml@f481e4d2cff7f15766729798dbb0811b5af6b700
