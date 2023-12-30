@@ -1,8 +1,7 @@
 # IAMme IAMme
 
-[![SAST](https://github.com/notdodo/IAMme-IAMme/actions/workflows/gosec.yml/badge.svg)](https://github.com/notdodo/IAMme-IAMme/actions/workflows/gosec.yml)
-[![Build and Test](https://github.com/notdodo/IAMme-IAMme/actions/workflows/gobuild.yml/badge.svg)](https://github.com/notdodo/IAMme-IAMme/actions/workflows/gobuild.yml)
-[![Infrastructure Security Scan](https://github.com/notdodo/IAMme-IAMme/actions/workflows/kics.yml/badge.svg)](https://github.com/notdodo/IAMme-IAMme/actions/workflows/kics.yml)
+[![Golang CI](https://github.com/notdodo/IAMme-IAMme/actions/workflows/go-ci.yml/badge.svg)](https://github.com/notdodo/IAMme-IAMme/actions/workflows/go-ci.yml)
+[![Infrastructure Security Scan](https://github.com/notdodo/IAMme-IAMme/actions/workflows/infrascan.yml/badge.svg)](https://github.com/notdodo/IAMme-IAMme/actions/workflows/infrascan.yml)
 
 ## ChatGPT definition
 
