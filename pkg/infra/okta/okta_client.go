@@ -22,11 +22,12 @@ type OktaClient interface {
 type oktaClient struct {
 	oktaClient *okta.Client
 	log        logging.LogManager
+	ctx        context.Context
 }
 
 func NewOktaClient(orgUrl, apiKey string) OktaClient {
 	logger := logging.GetLogManager()
-	_, client, err := okta.NewClient(context.TODO(), okta.WithOrgUrl(fmt.Sprintf("https://%s", orgUrl)), okta.WithToken(apiKey))
+	ctx, client, err := okta.NewClient(context.TODO(), okta.WithOrgUrl(fmt.Sprintf("https://%s", orgUrl)), okta.WithToken(apiKey))
 	if err != nil {
 		logger.Error("Invalid Okta login", "err", err)
 	}
@@ -34,31 +35,30 @@ func NewOktaClient(orgUrl, apiKey string) OktaClient {
 	return &oktaClient{
 		oktaClient: client,
 		log:        logger,
+		ctx:        ctx,
 	}
 }
 
 func (c *oktaClient) Users() ([]*okta.User, error) {
 	c.log.Info("Getting Okta users")
 	var users []*okta.User
-	appendUsers := func(oktaUsers []*okta.User) {
-		users = append(users, oktaUsers...)
-	}
 
 	oktaUsers, response, err := c.oktaClient.User.ListUsers(context.TODO(), nil)
 	if err != nil {
 		return nil, err
 	}
-	appendUsers(oktaUsers)
+	users = append(users, oktaUsers...)
 	for response.HasNextPage() {
+		var oktaUsers []*okta.User
 		response, err = response.Next(context.TODO(), &oktaUsers)
 		if err != nil {
 			return nil, err
 		}
-		appendUsers(oktaUsers)
+		users = append(users, oktaUsers...)
 	}
 
 	c.log.Info(fmt.Sprintf("Found %d users", len(users)))
-	c.log.Debug(fmt.Sprintf("Found %d users", len(users)), "users", response.Body)
+	c.log.Debug(fmt.Sprintf("Found %d users", len(users)), "users", users)
 	return users, nil
 }
 
