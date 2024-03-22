@@ -21,7 +21,6 @@ services:
       - "127.0.0.1:7474:7474"
       - "0.0.0.0:7687:7687"
     volumes:
-      - okta_data:/data
       - ./backup:/backup:rw
     environment:
       NEO4J_PLUGINS: '["apoc", "graph-data-science"]'
@@ -44,6 +43,3 @@ services:
 
 networks:
   iamme-iamme:
-
-volumes:
-  okta_data:
