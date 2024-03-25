@@ -1,20 +1,8 @@
 name: Gitleaks
 on:
   pull_request:
-  push:
 
 jobs:
-  scan:
-    name: gitleaks
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633
-        # v4.1.2
-        with:
-          fetch-depth: 0
-      - name: gitleaks
-        # bind to major to use latests checks
-        # kics-scan ignore-line
-        uses: gitleaks/gitleaks-action@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  gitleaks:
+    uses: notdodo/github-actions/.github/workflows/gitleaks.yml@6435f219501455cc66ebc2654a6f7b9a7a0e4ab1
+    # v0.1.1
