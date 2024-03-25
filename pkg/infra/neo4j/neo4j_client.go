@@ -32,7 +32,6 @@ type neo4jClient struct {
 	log    logging.LogManager
 }
 
-//nolint:all
 func (c *neo4jClient) setUpDb(session neo4j.SessionWithContext) {
 	c.log.Info("Flushing the database")
 	session.Run(context.TODO(), "MATCH (n) DETACH DELETE n;", nil) // #nosec G104
