@@ -21,7 +21,7 @@ concurrency:
 
 jobs:
   sast:
-    uses: notdodo/github-actions/.github/workflows/go-security-scan.yml@29b1489bc8c392e2a8355cb29ae1cdb199aa1c1a
+    uses: notdodo/github-actions/.github/workflows/go-security-scan.yml@941851ae821e4fa40c1752cffda47b50f39949f5
 
   build-and-test:
-    uses: notdodo/github-actions/.github/workflows/go-build-and-test.yml@test
+    uses: notdodo/github-actions/.github/workflows/go-build-and-test.yml@941851ae821e4fa40c1752cffda47b50f39949f5
