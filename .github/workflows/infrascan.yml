@@ -23,5 +23,5 @@ concurrency:
 
 jobs:
   infra-security-scan:
-    uses: notdodo/github-actions/.github/workflows/infra-security-scan.yml@babf5448da25db0c3d47d0348fb3d6979e7fc555
+    uses: notdodo/github-actions/.github/workflows/infra-security-scan.yml@f7181d1dec278ef7b8bafbbbed2ab55e2dbcca7b
     # v0.1.2
