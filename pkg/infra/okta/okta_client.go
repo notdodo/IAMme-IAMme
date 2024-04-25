@@ -64,59 +64,103 @@ func (c *oktaClient) Users() ([]*okta.User, error) {
 
 func (c *oktaClient) Groups() ([]*okta.Group, error) {
 	c.log.Info("Getting Okta groups")
-	oktaGroups, response, err := c.oktaClient.Group.ListGroups(context.TODO(), &query.Params{
+	oktaGroups, _, err := c.oktaClient.Group.ListGroups(context.TODO(), &query.Params{
 		Expand: "stats,app",
+		Limit:  10000,
 	})
 	if err != nil {
 		return nil, err
 	}
 
 	c.log.Info(fmt.Sprintf("Found %d groups", len(oktaGroups)))
-	c.log.Debug(fmt.Sprintf("Found %d groups", len(oktaGroups)), "groups", response.Body)
+	c.log.Debug(fmt.Sprintf("Found %d groups", len(oktaGroups)), "groups", oktaGroups)
 	return oktaGroups, nil
 }
 
 func (c *oktaClient) GroupsRules() ([]*okta.GroupRule, error) {
 	c.log.Info("Getting Okta groups rules")
-	oktaRules, response, err := c.oktaClient.Group.ListGroupRules(context.TODO(), nil)
+	var rules []*okta.GroupRule
+
+	oktaRules, response, err := c.oktaClient.Group.ListGroupRules(context.TODO(), &query.Params{
+		Limit: 200,
+	})
 	if err != nil {
 		return nil, err
 	}
+	rules = append(rules, oktaRules...)
+	for response.HasNextPage() {
+		var oktaRules []*okta.GroupRule
+		response, err = response.Next(context.TODO(), &oktaRules)
+		if err != nil {
+			return nil, err
+		}
+		rules = append(rules, oktaRules...)
+	}
 
-	c.log.Info(fmt.Sprintf("Found %d rules", len(oktaRules)))
-	c.log.Debug(fmt.Sprintf("Found %d rules", len(oktaRules)), "rules", response.Body)
-	return oktaRules, nil
+	c.log.Info(fmt.Sprintf("Found %d rules", len(rules)))
+	c.log.Debug(fmt.Sprintf("Found %d rules", len(rules)), "rules", rules)
+	return rules, nil
 }
 
 func (c *oktaClient) GroupMembers(groupId string) ([]*okta.User, error) {
 	c.log.Info("Getting Okta group members", "group", groupId)
-	oktaMembers, response, err := c.oktaClient.Group.ListGroupUsers(context.TODO(), groupId, nil)
+	var members []*okta.User
+
+	oktaMembers, response, err := c.oktaClient.Group.ListGroupUsers(context.TODO(), groupId, &query.Params{
+		Limit: 1000,
+	})
 	if err != nil {
 		return nil, err
 	}
-	c.log.Info(fmt.Sprintf("Found %d members for group %s", len(oktaMembers), groupId))
-	c.log.Debug(fmt.Sprintf("Found %d members for group %s", len(oktaMembers), groupId), "members", response.Body)
+	members = append(members, oktaMembers...)
+	for response.HasNextPage() {
+		var oktaMembers []*okta.User
+		response, err = response.Next(context.TODO(), &oktaMembers)
+		if err != nil {
+			return nil, err
+		}
+		members = append(members, oktaMembers...)
+	}
+
+	c.log.Info(fmt.Sprintf("Found %d members for group %s", len(members), groupId))
+	c.log.Debug(fmt.Sprintf("Found %d members for group %s", len(members), groupId), "members", members)
 	return oktaMembers, err
 }
 
 func (c *oktaClient) Applications() ([]okta.App, error) {
 	c.log.Info("Getting Okta applications")
-	oktaApps, response, err := c.oktaClient.Application.ListApplications(context.TODO(), nil)
+	var apps []okta.App
+
+	oktaApps, response, err := c.oktaClient.Application.ListApplications(context.TODO(), &query.Params{
+		Limit: 200,
+	})
 	if err != nil {
 		return nil, err
 	}
-	c.log.Info(fmt.Sprintf("Found %d applications", len(oktaApps)))
-	c.log.Debug(fmt.Sprintf("Found %d applications", len(oktaApps)), "applications", response.Body)
+	apps = append(apps, oktaApps...)
+	for response.HasNextPage() {
+		var oktaApps []okta.App
+		response, err = response.Next(context.TODO(), &oktaApps)
+		if err != nil {
+			return nil, err
+		}
+		apps = append(apps, oktaApps...)
+	}
+
+	c.log.Info(fmt.Sprintf("Found %d applications", len(apps)))
+	c.log.Debug(fmt.Sprintf("Found %d applications", len(apps)), "applications", apps)
 	return oktaApps, err
 }
 
 func (c *oktaClient) ApplicationGroupAssignments(appId string) ([]*okta.ApplicationGroupAssignment, error) {
 	c.log.Info("Getting Okta application group assigments", "application", appId)
-	oktaGroups, response, err := c.oktaClient.Application.ListApplicationGroupAssignments(context.TODO(), appId, nil)
+	oktaGroups, _, err := c.oktaClient.Application.ListApplicationGroupAssignments(context.TODO(), appId, &query.Params{
+		Limit: 200,
+	})
 	if err != nil {
 		return nil, err
 	}
 	c.log.Info(fmt.Sprintf("Found %d group assigments for application %s", len(oktaGroups), appId))
-	c.log.Debug(fmt.Sprintf("Found %d group assigments for application %s", len(oktaGroups), appId), "groupassignments", response.Body)
+	c.log.Debug(fmt.Sprintf("Found %d group assigments for application %s", len(oktaGroups), appId), "groupassignments", oktaGroups)
 	return oktaGroups, err
 }

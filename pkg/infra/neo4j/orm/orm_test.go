@@ -79,7 +79,7 @@ func TestCreateRelationsQuery(t *testing.T) {
 	}
 	query, parameters := createRelationsQuery(label, aLabels, bLabels, properties)
 
-	expectedQuery := fmt.Sprintf(`UNWIND $propsList AS props MATCH (a:%s), (b:%s) WHERE a[props.left_key] = props.left_value AND b[props.right_key] = props.right_value CREATE (a)-[r:%s]->(b) SET r += apoc.map.fromPairs([[props.left_key, props.left_value], [props.right_key, props.right_value]]) RETURN id(r) as id`, strings.Join(aLabels, ":"), strings.Join(bLabels, ":"), label)
+	expectedQuery := fmt.Sprintf(`UNWIND $propsList AS props MATCH (a:%s), (b:%s) WHERE a[props.left_key] = props.left_value AND b[props.right_key] = props.right_value MERGE (a)-[r:%s]->(b) SET r += apoc.map.fromPairs([[props.left_key, props.left_value], [props.right_key, props.right_value]]) RETURN id(r) as id`, strings.Join(aLabels, ":"), strings.Join(bLabels, ":"), label)
 	if expectedQuery != query {
 		t.Errorf("expected: %s\ngot: %s", expectedQuery, query)
 	}
