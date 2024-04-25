@@ -40,9 +40,9 @@ func (a *iamme) Dump() {
 	for _, rule := range rules {
 		for _, gid := range rule.Actions.AssignUserToGroups.GroupIds {
 			groupRules = append(groupRules, map[string]interface{}{
-				"left_key":    "GroupRule_Id",
+				"left_key":    "Id",
 				"left_value":  rule.Id,
-				"right_key":   "Group_Id",
+				"right_key":   "Id",
 				"right_value": gid,
 			})
 		}
@@ -53,9 +53,9 @@ func (a *iamme) Dump() {
 	for _, group := range groups {
 		for _, gid := range group.Members {
 			groupMembers = append(groupMembers, map[string]interface{}{
-				"left_key":    "User_Id",
+				"left_key":    "Id",
 				"left_value":  gid.Id,
-				"right_key":   "Group_Id",
+				"right_key":   "Id",
 				"right_value": group.Id,
 			})
 		}
@@ -67,9 +67,9 @@ func (a *iamme) Dump() {
 	for _, application := range applications {
 		for _, ga := range application.GroupAssignments {
 			groupAssignments = append(groupAssignments, map[string]interface{}{
-				"left_key":    "Group_Id",
+				"left_key":    "Id",
 				"left_value":  ga.Id,
-				"right_key":   "Application_Id",
+				"right_key":   "Id",
 				"right_value": application.Id,
 			})
 		}
@@ -108,8 +108,7 @@ func (a *iamme) groupsWithMembers() []*Group {
 		users := make([]*User, 0, len(members))
 		for _, member := range members {
 			users = append(users, &User{
-				Id:   member.Id,
-				User: member,
+				Id: member.Id,
 			})
 		}
 		return &Group{
