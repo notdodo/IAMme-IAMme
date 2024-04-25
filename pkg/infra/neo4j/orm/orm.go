@@ -8,6 +8,22 @@ import (
 	"github.com/neo4j/neo4j-go-driver/v5/neo4j"
 )
 
+func EmptyDatabase(session neo4j.SessionWithContext) error {
+	_, err := session.Run(context.TODO(), "MATCH (n) DETACH DELETE n;", nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func CreateIndex(session neo4j.SessionWithContext, label string, key string) error {
+	_, err := session.Run(context.TODO(), fmt.Sprintf("CREATE CONSTRAINT IF NOT EXISTS FOR (l:%s) REQUIRE l.%s IS UNIQUE;", label, key), nil)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 func CreateNodes(session neo4j.SessionWithContext, labels []string, properties []map[string]interface{}) ([]map[string]interface{}, error) {
 	ctx := context.TODO()
 	result, err := session.ExecuteWrite(ctx, func(tx neo4j.ManagedTransaction) (interface{}, error) {
@@ -56,7 +72,7 @@ func CreateRelationsAtoB(session neo4j.SessionWithContext, label string, aLabels
 func createRelationsQuery(label string, aLabels []string, bLabels []string, properties []map[string]interface{}) (string, map[string]interface{}) {
 	query := fmt.Sprintf(`UNWIND $propsList AS props MATCH (a:%s), (b:%s) 
 							WHERE a[props.left_key] = props.left_value AND b[props.right_key] = props.right_value
-							CREATE (a)-[r:%s]->(b)
+							MERGE (a)-[r:%s]->(b)
 							SET r += apoc.map.fromPairs([[props.left_key, props.left_value], [props.right_key, props.right_value]])
 							RETURN id(r) as id`, flatLabels(aLabels), flatLabels(bLabels), label)
 	parameters := map[string]interface{}{"propsList": properties}
