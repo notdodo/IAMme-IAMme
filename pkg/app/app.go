@@ -175,7 +175,7 @@ func flat[T any](data []T) []map[string]interface{} {
 			OmitNil:   true,
 		})
 		var jsonObject map[string]interface{}
-		json.Unmarshal([]byte(js), &jsonObject)
+		_ = json.Unmarshal([]byte(js), &jsonObject)
 		return jsonObject
 	})
 	return flatData
