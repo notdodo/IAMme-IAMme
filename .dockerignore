@@ -2,7 +2,6 @@
 .github
 README.md
 Makefile
-.env_example
 .vscode
 .gitignore
 docker-compose.yaml
