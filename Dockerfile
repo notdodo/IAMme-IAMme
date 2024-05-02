@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/go/pkg/mod/ \
 
 FROM scratch
 COPY --from=app-builder /go/bin/iamme /iamme
-COPY .env /.env
+COPY .env* /.env
 # ref: https://github.com/charmbracelet/log/issues/90
 ENV CI=true
 COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
