@@ -1,6 +1,8 @@
 package app
 
 import (
+	"encoding/json"
+
 	"github.com/notdodo/IAMme-IAMme/pkg/infra/neo4j"
 	"github.com/notdodo/IAMme-IAMme/pkg/infra/okta"
 	"github.com/notdodo/IAMme-IAMme/pkg/io/logging"
@@ -166,11 +168,15 @@ func (a *iamme) applicationsWithGroupAssigments() []*Application {
 
 func flat[T any](data []T) []map[string]interface{} {
 	flatData := iter.Map(data, func(item *T) map[string]interface{} {
-		return goflat.FlatStruct(*item, goflat.FlattenerConfig{
+		jsonString, _ := json.Marshal(item)
+		js, _ := goflat.FlatJSON(string(jsonString), goflat.FlattenerConfig{
 			Separator: "_",
 			OmitEmpty: true,
 			OmitNil:   true,
 		})
+		var jsonObject map[string]interface{}
+		json.Unmarshal([]byte(js), &jsonObject)
+		return jsonObject
 	})
 	return flatData
 }
