@@ -1,5 +1,3 @@
-version: "3"
-
 services:
   # kics-scan ignore-line
   neo4j:
