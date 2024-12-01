@@ -5,7 +5,7 @@ go 1.21
 require (
 	github.com/charmbracelet/log v0.4.0
 	github.com/joho/godotenv v1.5.1
-	github.com/neo4j/neo4j-go-driver/v5 v5.26.0
+	github.com/neo4j/neo4j-go-driver/v5 v5.27.0
 	github.com/notdodo/goflat/v2 v2.1.1
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/sourcegraph/conc v0.3.0
