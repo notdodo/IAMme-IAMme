@@ -22,6 +22,12 @@ concurrency:
 jobs:
   sast:
     uses: notdodo/github-actions/.github/workflows/go-security-scan.yml@go-sec-v0
+    with:
+      egress-policy-allowlist: >
+        proxy.golang.org:443
+        sum.golang.org:443
+        objects.githubusercontent.com:443
+        storage.googleapis.com:443
 
   build-and-test:
     uses: notdodo/github-actions/.github/workflows/go-ci.yml@go-ci-v0
@@ -29,12 +35,14 @@ jobs:
       egress-policy-allowlist: >
         proxy.golang.org:443
         sum.golang.org:443
+        objects.githubusercontent.com:443
+        storage.googleapis.com:443
 
   build-docker-image:
     if: ${{ github.event_name == 'pull_request' }}
     uses: notdodo/github-actions/.github/workflows/docker-build-and-push.yml@docker-build-and-push-v0
     with:
-      image: notdodo/iamm-iamme
+      image: notdodo/iamme-iamme
       platforms: linux/amd64
       push: false
       registry: ghcr.io
