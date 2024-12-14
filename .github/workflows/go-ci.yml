@@ -30,7 +30,7 @@ jobs:
     if: ${{ github.event_name == 'pull_request' }}
     uses: notdodo/github-actions/.github/workflows/docker-build-and-push.yml@docker-build-and-push-v0
     with:
-      image: notdodo/iamm-iamme
+      image: notdodo/iamme-iamme
       platforms: linux/amd64
       push: false
       registry: ghcr.io
