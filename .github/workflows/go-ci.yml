@@ -25,6 +25,10 @@ jobs:
 
   build-and-test:
     uses: notdodo/github-actions/.github/workflows/go-ci.yml@go-ci-v0
+    with:
+      egress-policy-allowlist: >
+        proxy.golang.org:443
+        sum.golang.org:443
 
   build-docker-image:
     if: ${{ github.event_name == 'pull_request' }}
