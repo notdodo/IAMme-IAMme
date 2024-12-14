@@ -1,4 +1,4 @@
-FROM --platform=${BUILDPLATFORM} golang:alpine as app-builder
+FROM golang:alpine as app-builder
 WORKDIR /go/src/app
 RUN --mount=type=cache,target=/go/pkg/mod/ \
     --mount=type=bind,source=go.sum,target=go.sum \
