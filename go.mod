@@ -11,7 +11,7 @@ require (
 	github.com/notdodo/goflat/v2 v2.1.1
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/sourcegraph/conc v0.3.0
-	github.com/spf13/cobra v1.8.1
+	github.com/spf13/cobra v1.9.1
 )
 
 require (
@@ -31,7 +31,7 @@ require (
 	github.com/muesli/termenv v0.15.2 // indirect
 	github.com/patrickmn/go-cache v0.0.0-20180815053127-5633e0862627 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
-	github.com/spf13/pflag v1.0.5 // indirect
+	github.com/spf13/pflag v1.0.6 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/exp v0.0.0-20241210194714-1829a127f884 // indirect
