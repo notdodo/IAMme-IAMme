@@ -34,6 +34,8 @@ jobs:
       platforms: linux/amd64
       push: false
       registry: ghcr.io
+      egress-policy-allowlist: >
+        proxy.golang.org:443
     secrets:
       registry-username: notdodo
       registry-password: ${{ secrets.GITHUB_TOKEN }}
