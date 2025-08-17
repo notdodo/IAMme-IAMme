@@ -46,8 +46,8 @@ func CreateNodes(session neo4j.SessionWithContext, labels []string, properties [
 func createNodesQuery(labels []string, properties []map[string]interface{}) (string, map[string]interface{}) {
 	query := fmt.Sprintf("UNWIND $propsList AS props CREATE (n:%s) SET n += props RETURN id(n) as id", flatLabels(labels))
 	parameters := map[string]interface{}{"propsList": filteredProperties(properties)}
-	query = strings.Replace(query, "\t", "", -1)
-	query = strings.Replace(query, "\n", "", -1)
+	query = strings.ReplaceAll(query, "\t", "")
+	query = strings.ReplaceAll(query, "\n", "")
 	return oneLineQuery(query), parameters
 }
 
@@ -119,8 +119,8 @@ func flatLabels(labels []string) string {
 }
 
 func oneLineQuery(query string) string {
-	query = strings.Replace(query, "\t", "", -1)
-	query = strings.Replace(query, "\n", " ", -1)
-	query = strings.Replace(query, "  ", " ", -1)
+	query = strings.ReplaceAll(query, "\t", "")
+	query = strings.ReplaceAll(query, "\n", " ")
+	query = strings.ReplaceAll(query, "  ", " ")
 	return query
 }
