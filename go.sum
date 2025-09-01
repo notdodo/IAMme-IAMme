@@ -46,8 +46,8 @@ github.com/mattn/go-runewidth v0.0.16 h1:E5ScNMtiwvlvB5paMFdw9p4kSQzbXFikJ5SQO6T
 github.com/mattn/go-runewidth v0.0.16/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
 github.com/muesli/termenv v0.16.0 h1:S5AlUN9dENB57rsbnkPyfdGuWIlkmzJjbFf0Tf5FWUc=
 github.com/muesli/termenv v0.16.0/go.mod h1:ZRfOIKPFDYQoDFF4Olj7/QJbW60Ol/kL1pU3VfY/Cnk=
-github.com/neo4j/neo4j-go-driver/v5 v5.28.2 h1:uG7nMK0zS/a/iSWMZgCIY40SfYzWBc6uSrMONhiIS0U=
-github.com/neo4j/neo4j-go-driver/v5 v5.28.2/go.mod h1:Vff8OwT7QpLm7L2yYr85XNWe9Rbqlbeb9asNXJTHO4k=
+github.com/neo4j/neo4j-go-driver/v5 v5.28.3 h1:OHP/vzX0oZ2YUY5DnGUp7QY21BIpOzw+Pp+Dga8zYl4=
+github.com/neo4j/neo4j-go-driver/v5 v5.28.3/go.mod h1:Vff8OwT7QpLm7L2yYr85XNWe9Rbqlbeb9asNXJTHO4k=
 github.com/notdodo/goflat/v2 v2.1.1 h1:3MKdKmM2wE0l4exgNE/3CijAMVxezKWZxMLelyNqA0Q=
 github.com/notdodo/goflat/v2 v2.1.1/go.mod h1:nYYtKs9ZIPL/5we4eYyrErlyKTcgSSaeJK8SjqYtR9Y=
 github.com/ohler55/ojg v1.21.5 h1:Wfok9bfUImPFe3v6W61+Kz0j3fcjBt0NDVIpOtHAczQ=
@@ -68,10 +68,10 @@ github.com/rogpeppe/go-internal v1.9.0/go.mod h1:WtVeX8xhTBvf0smdhujwtBcq4Qrzq/f
 github.com/russross/blackfriday/v2 v2.1.0/go.mod h1:+Rmxgy9KzJVeS9/2gXHxylqXiyQDYRxCVz55jmeOWTM=
 github.com/sourcegraph/conc v0.3.0 h1:OQTbbt6P72L20UqAkXXuLOj79LfEanQ+YQFNpLA9ySo=
 github.com/sourcegraph/conc v0.3.0/go.mod h1:Sdozi7LEKbFPqYX2/J+iBAM6HpqSLTASQIKqDmF7Mt0=
-github.com/spf13/cobra v1.9.1 h1:CXSaggrXdbHK9CF+8ywj8Amf7PBRmPCOJugH954Nnlo=
-github.com/spf13/cobra v1.9.1/go.mod h1:nDyEzZ8ogv936Cinf6g1RU9MRY64Ir93oCnqb9wxYW0=
-github.com/spf13/pflag v1.0.6 h1:jFzHGLGAlb3ruxLB8MhbI6A8+AQX/2eW4qeyNZXNp2o=
-github.com/spf13/pflag v1.0.6/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An2Bg=
+github.com/spf13/cobra v1.10.0 h1:a5/WeUlSDCvV5a45ljW2ZFtV0bTDpkfSAj3uqB6Sc+0=
+github.com/spf13/cobra v1.10.0/go.mod h1:9dhySC7dnTtEiqzmqfkLj47BslqLCUPMXjG2lj/NgoE=
+github.com/spf13/pflag v1.0.8 h1:/v546uKZ4gFGHpyXvV6CNKDeJBu4l5PRvxwQvdWrc0I=
+github.com/spf13/pflag v1.0.8/go.mod h1:McXfInJRrz4CZXVZOBLb0bTZqETkiAhM9Iw0y3An2Bg=
 github.com/stretchr/objx v0.1.0/go.mod h1:HFkY916IF+rwdDfMAkV7OtwuqBVzrE8GR6GFx+wExME=
 github.com/stretchr/testify v1.7.0/go.mod h1:6Fq8oRcR53rry900zMqJjRRixrwX3KX962/h/Wwjteg=
 github.com/stretchr/testify v1.10.0 h1:Xv5erBjTwe/5IxqUQTdXv5kgmIvbHo3QQyRwhJsOfJA=
