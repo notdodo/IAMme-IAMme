@@ -15,4 +15,5 @@ COPY .env* /.env
 ENV CI=true
 COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
 HEALTHCHECK NONE
+USER scratchuser
 ENTRYPOINT [ "/iamme" ]
