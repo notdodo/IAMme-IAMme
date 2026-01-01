@@ -11,7 +11,7 @@ require (
 	github.com/notdodo/goflat/v2 v2.1.1
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/sourcegraph/conc v0.3.0
-	github.com/spf13/cobra v1.10.1
+	github.com/spf13/cobra v1.10.2
 )
 
 require (
