@@ -10,6 +10,8 @@ updates:
       iamme:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
   - package-ecosystem: docker
     directory: /
     schedule:
@@ -20,9 +22,13 @@ updates:
       iamme-docker:
         patterns:
           - "*"
+    cooldown:
+      default-days: 7
   - package-ecosystem: github-actions
     directory: /
     schedule:
       interval: monthly
       time: "12:00"
       day: wednesday
+    cooldown:
+      default-days: 7
