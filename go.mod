@@ -3,10 +3,10 @@ module github.com/notdodo/IAMme-IAMme
 go 1.24.2
 
 require (
-	github.com/charmbracelet/log v0.4.2
+	github.com/charmbracelet/log v1.0.0
 	github.com/joho/godotenv v1.5.1
 	github.com/neo4j/neo4j-go-driver/v5 v5.28.4
-	github.com/notdodo/goflat/v2 v2.1.1
+	github.com/notdodo/goflat/v2 v2.2.0
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/sourcegraph/conc v0.3.0
 	github.com/spf13/cobra v1.10.2
