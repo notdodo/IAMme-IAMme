@@ -44,6 +44,7 @@ jobs:
 
   build-docker-image:
     permissions:
+      artifact-metadata: write
       attestations: write
       contents: read
       id-token: write
