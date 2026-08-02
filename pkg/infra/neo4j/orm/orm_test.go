@@ -35,7 +35,6 @@ func TestCreateNodesQuery(t *testing.T) {
 	flattenedMap := []map[string]interface{}{goflat.FlatStruct(group, goflat.FlattenerConfig{
 		Prefix:    "",
 		Separator: ".",
-		SortKeys:  true,
 		OmitEmpty: true,
 	})}
 	query, parameters := createNodesQuery(labels, flattenedMap)
