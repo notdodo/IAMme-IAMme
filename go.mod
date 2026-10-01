@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/charmbracelet/log v1.0.0
 	github.com/joho/godotenv v1.5.1
-	github.com/neo4j/neo4j-go-driver/v5 v5.28.4
+	github.com/neo4j/neo4j-go-driver/v5 v5.28.5
 	github.com/notdodo/goflat/v2 v2.2.0
 	github.com/okta/okta-sdk-golang/v2 v2.20.0
 	github.com/sourcegraph/conc v0.3.0
