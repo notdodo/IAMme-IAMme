@@ -52,8 +52,8 @@ github.com/mattn/go-runewidth v0.0.19 h1:v++JhqYnZuu5jSKrk9RbgF5v4CGUjqRfBm05byF
 github.com/mattn/go-runewidth v0.0.19/go.mod h1:XBkDxAl56ILZc9knddidhrOlY5R/pDhgLpndooCuJAs=
 github.com/muesli/termenv v0.16.0 h1:S5AlUN9dENB57rsbnkPyfdGuWIlkmzJjbFf0Tf5FWUc=
 github.com/muesli/termenv v0.16.0/go.mod h1:ZRfOIKPFDYQoDFF4Olj7/QJbW60Ol/kL1pU3VfY/Cnk=
-github.com/neo4j/neo4j-go-driver/v5 v5.28.4 h1:7toxehVcYkZbyxV4W3Ib9VcnyRBQPucF+VwNNmtSXi4=
-github.com/neo4j/neo4j-go-driver/v5 v5.28.4/go.mod h1:Vff8OwT7QpLm7L2yYr85XNWe9Rbqlbeb9asNXJTHO4k=
+github.com/neo4j/neo4j-go-driver/v5 v5.28.5 h1:YfqEKXt8AxsXRMGu73eNipYWCSXodVI4dl2I8iwcavA=
+github.com/neo4j/neo4j-go-driver/v5 v5.28.5/go.mod h1:Vff8OwT7QpLm7L2yYr85XNWe9Rbqlbeb9asNXJTHO4k=
 github.com/notdodo/goflat/v2 v2.2.0 h1:ofY7RHfAnEpGIWk2xOVJrDcXS9xlRHW2sBobrKZZZQg=
 github.com/notdodo/goflat/v2 v2.2.0/go.mod h1:FP8hQ4Ur9ZnY8M/PKvuqTlBjoDb+v4bKUphdTZVRbz0=
 github.com/ohler55/ojg v1.28.0 h1:8xClBgMIRRJGDUC9xNe7NprP4kD2C3mQMeon3wY4KXA=
